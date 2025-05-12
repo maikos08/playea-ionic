@@ -1,0 +1,7 @@
+{
+  "name": "playea-ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
