@@ -1,0 +1,22 @@
+<div *ngIf="beaches?.length; else emptyState" class="beach-grid" role="list">
+    <app-beach-card
+        *ngFor="let beach of beaches; trackBy: trackById"
+        [beach]="beach"
+        class="beach-grid__item"
+        role="listitem">
+    </app-beach-card>
+</div>
+
+<!-- Mensaje cuando no hay playas -->
+<ng-template #emptyState>
+    <div *ngIf="showEmptyState">
+        <p class="beach-grid beach-grid--empty">No hay playas disponibles.</p>
+        <div class="carga-de-playas">
+            <button class="btn-cargar">Cargar Playas a Firebase</button>
+            <p *ngIf="uploadStatus">{{ uploadStatus }}</p>
+        </div>
+    </div>
+    <div *ngIf="!showEmptyState">
+        <p class="beach-grid beach-grid--empty">No hay playas disponibles.</p>
+    </div>
+</ng-template>

@@ -1,0 +1,13 @@
+<div class="banner">
+  <div class="banner__content">
+    <h1 class="banner__title">Encuentra tu playa perfecta</h1>
+  </div>
+</div>
+
+<div style="padding: 0.5rem;">
+  <app-beach-grid *ngIf="!loading" [beaches]="beaches" [showEmptyState]="true"></app-beach-grid>
+</div>
+
+<div *ngIf="loading" class="loading-indicator">
+  <p>Loading...</p>
+</div>

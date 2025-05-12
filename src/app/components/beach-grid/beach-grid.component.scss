@@ -1,0 +1,54 @@
+/* BLOQUE PRINCIPAL */
+.beach-grid {
+	display: grid;
+	gap: 0.5rem;
+	justify-content: center;
+	padding: 0.5rem;
+	grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+	width: 100%;
+	margin: auto;
+}
+
+.btn-cargar {
+  background-color: #007bff;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+.btn-cargar:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.btn-cargar:active {
+  background-color: #004080;
+  transform: translateY(0);
+}
+
+
+/* ELEMENTO */
+.beach-grid__item {
+	width: 100%;
+}
+
+/* MODIFICADOR */
+.beach-grid--empty {
+	text-align: center;
+	font-size: 1.25rem;
+	font-weight: bold;
+	color: var(--text-color, #333);
+	padding: 2rem;
+}
+
+@media (max-width: 768px) {
+	.beach-grid {
+		grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+	}
+}

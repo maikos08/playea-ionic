@@ -1,0 +1,18 @@
+<a *ngIf="beach" class="beach-card__link" href="/beach/{{ beach.name.toLowerCase().replaceAll(' ', '-') }}">
+  <article class="beach-card">
+    <figure class="beach-card__media">
+      <img [src]="beach.coverUrl" [alt]="beach.name" loading="lazy">
+      <div *ngIf="beach.blueFlag" class="beach-card__flag beach-card__flag--blue">Bandera Azul</div>
+    </figure>
+    <div class="beach-card__details">
+      <header class="beach-card__header">
+        <h3 class="beach-card__name">{{ beach.name }}</h3>
+        <div class="beach-card__location">
+          <p class="beach-card__island">{{ beach.island }}</p>
+        </div>
+      </header>
+      <p class="beach-card__size">{{ beach.length }} metros de longitud</p>
+    </div>
+  </article>
+</a>
+<div *ngIf="!beach">Playa no disponible</div>

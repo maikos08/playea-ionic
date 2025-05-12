@@ -1,37 +1,123 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
+:root {
+  /* Primary Colors */
+  --primary-color: #ff385c; /* Warm sand color -> Cambiado por un tono rojizo similar */
+  --secondary-color: #e31c5f; /* Ocean blue */
+  --accent-color: #00bfae; /* Seafoam green */
 
-/* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+  /* Text Colors */
+  --text-color: #333333; /* Dark text for readability */
+  --header-text-color: #000000; /* White text for headers */
+  --footer-text-color: #ffffff; /* Light sandy beige for footer text -> Cambiado a un tono rojizo */
 
-/* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+  /* Background Colors */
+  --header-background: #ffffff; /* Beachwood - dark wood for header */
+  --footer-background: #e31c5f; /* Darker sand tone for footer -> Cambiado a un tono rojizo */
+  --main-background: #ffffff; /* Clean white background */
+  --section-background: #aee2d8; /* Light seafoam green for sections */
 
-/* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
+  /* Accent Colors */
+  --button-background: #e31c5f; /* Coral color for buttons */
+  --button-text-color: #ffffff; /* White text on buttons */
+  --link-color: #0099cc; /* Ocean blue for links */
+  --link-hover-color: #ff385c; /* Seafoam green on hover -> Cambiado a un tono rojizo */
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+  /* Other Colors */
+  --light-sand: #ff385c; /* Light sandy beige -> Cambiado a un tono rojizo claro */
+  --sky-blue: #87ceeb; /* Clear sky blue */
+  --sunset-orange: #e31c5f; /* Warm sunset orange -> Cambiado a un tono rojizo */
+  --seafoam: #aee2d8; /* Light seafoam green */
+  --beachwood: #4e3629; /* Driftwood brown */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+  /* Border Colors */
+  --header-border: #4e3629; /* Dark wood border for header */
+
+  /* CARDS */
+  --card-bg-color: #fff;
+  --card-border-color: #e0e0e0;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: rgba(0, 0, 0, 0.15);
+
+  --badge-bg-color: #ff385c; /* Cambiado a tono rojizo */
+  --badge-bg-color-light: #ff385d17; /* Cambiado a tono rojizo claro */
+  --badge-text-color: #fff;
+
+  --card-title-color: #222;
+  --card-text-color: #666;
+  --card-hover-transform: -3px;
+
+  --rating-star-color: #ff385c; /* Cambiado a tono rojizo */
+  --rating-text-color: #fff; /* Cambiado a tono rojizo */
+  --change-user-image-color: #f5002c; /* Mantengo el tono naranjado porque no es amarillo puro */
+
+  /* Nuevos colores propuestos */
+  --tertiary-color: #ff6f61;
+  --complement-color: #007a7a;
+  --neutral-dark: #2a2a2a;
+  --neutral-light: #f5f5f5;
+  --highlight-color: #ff9f1c;
+  --muted-red: #d13f5b;
+  --deep-sea: #004d4d;
+  --soft-beige: #f9e8d9;
+  --warm-gray: #8d552b;
+  --hover-darken: #b0123f;
+
+  /* END CARDS */
+
+  /* LOGIN */
+  --login-primary-bg: #ffffff; /* Fondo principal: Blanco puro para un diseño limpio */
+  --login-secondary-bg: #f8f9fa; /* Fondo secundario: Un gris claro sutil para contraste */
+  --login-text-color: #222222; /* Texto: Negro suave para buena legibilidad */
+  --login-input-bg: #ffffff; /* Fondo de inputs: Blanco para simplicidad */
+  --login-button-color: #ff385c; /* Cambiado a un tono rojizo */
+  --login-button-hover: #bd1746; /* Hover del botón: Un tono más fuerte para efecto visual */
+  --login-border-color: #dddddd; /* Bordes y líneas: Gris claro para suavidad */
+  --login-placeholder-color: #717171; /* Texto de placeholder: Gris medio, visible pero no invasivo */
+  /* END LOGIN */
+}
+
+
+main {
+  width: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+.app-logo {
+  text-transform: uppercase;
+  color: #000;
+  font-size: 30px;
+  align-self: flex-start;
+  font-weight: 700;
+  margin: 2vh 6vw
+}
+
+input {
+  outline: none;
+  padding: 4px 8px;
+}
+
+
+ul {
+  list-style-type: none;
+}
+
+app-beach-card {
+  width: 100%;
+}
+
+.loading-indicator {
+  font-size: large;
+  font-weight: 600;
+  color: #333;
+  margin-top: 15px;
+  justify-self: center;
+}
