@@ -1,0 +1,84 @@
+/* Blocks */
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  background-color: var(--header-background, #fff);
+  color: var(--header-text-color, #000);
+  padding: 0 4vw;
+  height: 4rem;
+  border-bottom: 1px solid var(--header-border-color, #ddd);
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+/* Elements */
+.logo {
+  height: 100%;
+  object-fit: cover;
+  overflow: hidden; /* Añade esto para recortar el desborde */
+}
+
+.logo__image {
+  width: 100%;
+  min-width: 50px;
+  min-height: 50px;
+  height: 100%;
+  object-fit: fill;
+  object-position: center;
+}
+
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.header__nav-list {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.header__nav-link {
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: var(--header-text-color, #000);
+  transition: color 0.3s ease-in-out;
+}
+
+.header__nav-link:hover {
+  color: var(--header-hover-color, #ccc);
+}
+
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .header__nav {
+      width: 80%;
+  }
+
+  .header__nav-link {
+      font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 550px) {
+  .header__nav {
+      display: none;
+  }
+
+  .popup__nav-button--mobile {
+      display: flex;
+  }
+}

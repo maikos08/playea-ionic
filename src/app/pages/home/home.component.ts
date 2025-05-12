@@ -8,7 +8,7 @@ import { beachesList } from 'src/app/constants/beaches-list';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [BeachGridComponent, CommonModule]
+  imports: [BeachGridComponent, CommonModule,]
 })
 export class HomeComponent {
   beaches: Beach[] = beachesList;
