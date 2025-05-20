@@ -1,0 +1,130 @@
+.header {
+  --background: var(#435, #fff);
+  --color: var(--header-text-color, #000);
+  border-bottom: 1px solid var(--header-border-color, #ddd);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+ion-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 0 4vw;
+  height: 4rem;
+}
+
+ion-buttons {
+  justify-content: end;
+}
+
+.logo {
+  height: 100%;
+  overflow: hidden;
+}
+
+.logo__image {
+  width: 100%;
+  min-width: 50px;
+  min-height: 50px;
+  height: 100%;
+  object-fit: fill;
+  object-position: center;
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.header__nav-link {
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: var(--header-text-color, #000);
+  --transition: color 0.3s ease-in-out;
+}
+
+.header__nav-link:active {
+  color: var(--header-hover-color, #ccc);
+}
+
+.user-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px 20px;
+}
+
+.user-header__auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.user-header__button {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+  --transition: background-color 0.3s ease;
+}
+
+.user-header__button--login {
+  --background: var(--ion-color-secondary, #e31c5f);
+  --color: var(--ion-color-light, #ffffff);
+}
+
+.user-header__button--login:active {
+  --background: var(--ion-color-secondary-shade, #b0123f);
+}
+
+.user-header__button--register {
+  --background: var(--ion-color-tertiary, #ff6f61);
+  --color: var(--ion-color-light, #ffffff);
+}
+
+.user-header__button--register:active {
+  --background: var(--ion-color-tertiary-shade, #d13f5b);
+}
+
+.user-header__user-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.user-header__menu-toggle {
+  width: 2.7rem;
+  height: 2.7rem;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+.user-header__menu-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1px solid #000;
+  border-radius: 100%;
+}
+
+@media (max-width: 768px) {
+  .header__nav {
+    width: 80%;
+  }
+
+  .header__nav-link {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 550px) {
+  .header__nav {
+    display: none;
+  }
+}

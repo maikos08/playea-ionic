@@ -1,0 +1,8 @@
+<ion-buttons slot="end">
+  <div class="user-header">
+    <div *ngIf="!isRegistered" class="user-header__auth-buttons">
+      <a href="/auth/login" class="user-header__button user-header__button--login">Login</a>
+      <a href="/auth/register" class="user-header__button user-header__button--register">Register</a>
+    </div>
+  </div>
+</ion-buttons>
