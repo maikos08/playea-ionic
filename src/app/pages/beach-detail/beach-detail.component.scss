@@ -1,0 +1,21 @@
+.beach-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--ion-padding, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 60px; /* Added top padding to avoid overlap with header */
+}
+
+ion-text {
+  display: block;
+  color: var(--ion-color-danger);
+  font-size: 1rem;
+}
+
+.loading-text {
+  color: var(--ion-color-medium);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
