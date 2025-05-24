@@ -9,5 +9,9 @@ export default [
     path:'beach/:slug',
     loadComponent: () => import('./beach-detail/beach-detail.component').then(m => m.BeachDetailComponent)
 
+  },
+  {
+    path:'favorites',
+    loadComponent: () => import('./favorites/favorites.component').then(m => m.FavoritesComponent)
   }
 ] as Routes;
