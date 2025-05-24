@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { BeachDetailLayoutComponent } from '../../components/beach-detail-layout/beach-detail-layout.component';
 import { Beach } from '../../models/beach';
 import { BeachService } from '../../services/beach.service';
+import { HeaderAlignmentComponent } from 'src/app/components/header-alignment/header-alignment.component';
 
 @Component({
   selector: 'app-beach-detail',
   standalone: true,
-  imports: [CommonModule, IonicModule, BeachDetailLayoutComponent, RouterModule],
+  imports: [CommonModule, IonicModule, BeachDetailLayoutComponent, RouterModule, HeaderAlignmentComponent],
   templateUrl: './beach-detail.component.html',
   styleUrls: ['./beach-detail.component.scss'],
 })

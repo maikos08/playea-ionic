@@ -42,7 +42,7 @@ export class RegisterComponent {
     firstName: this._formBuilder.control('', [Validators.required]),
     lastName: this._formBuilder.control('', [Validators.required]),
     email: this._formBuilder.control('', [Validators.required, Validators.email]),
-    password: this._formBuilder.control('', [Validators.required, Validators.minLength(6)]),
+    password: this._formBuilder.control('', [Validators.required, Validators.minLength(8)]),
     confirmPassword: this._formBuilder.control('', [Validators.required]),
     terms: this._formBuilder.control(false, [Validators.requiredTrue]),
   });
