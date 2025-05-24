@@ -1,4 +1,4 @@
-.register {
+.login {
   display: flex;
   width: 100%;
   height: 100%;
@@ -6,7 +6,7 @@
   overflow: hidden;
 }
 
-.register__panel {
+.login__panel {
   width: 50%;
   height: 100%;
   display: flex;
@@ -27,36 +27,37 @@
   position: relative;
 }
 
-.register__logo {
+.login__logo {
   color: #000;
 }
 
-.register__title-icon {
+.login__title-icon {
   font-size: 0.9rem;
   margin-top: 10px;
 }
 
-.register__title {
+.login__title {
   font-size: 2.5rem;
   display: flex;
 }
 
-.register__subtitle {
+.login__subtitle {
   font-size: 1.5rem;
   margin-bottom: 10px;
 }
 
-.register__text {
+.login__text {
   margin-bottom: 20px;
   font-size: 0.9rem;
 }
 
-.register__link {
+.login__link {
   color: var(--login-button-color);
   text-decoration: none;
+  font-weight: bold;
 }
 
-.register__form {
+.login__form {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -65,17 +66,40 @@
   max-width: 500px;
 }
 
-.register__input-group {
-  display: flex;
-  gap: 10px;
-}
-
-.register__input-wrapper {
+.login__input-wrapper {
   width: 100%;
   position: relative;
 }
 
-.register__input {
+.login__password-wrapper {
+  width: 100%;
+}
+
+.login__password-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 1px solid var(--login-border-color);
+  border-radius: 5px;
+  background-color: var(--login-input-bg);
+}
+
+.login__password-toggle {
+  cursor: pointer;
+  padding: 0 10px;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.login__password-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.login__input {
   background-color: var(--login-input-bg);
   border: 1px solid var(--login-border-color);
   padding: 10px;
@@ -84,15 +108,14 @@
   width: 100%;
 }
 
-.register__input--password {
-  padding-right: 40px; /* Espacio para el ícono */
-  border: none; /* Sin borde en el input */
-  background: transparent; /* Fondo transparente */
-  flex: 1; /* Ocupa el espacio disponible */
+.login__input--password {
+  padding-right: 40px;
+  border: none;
+  background: transparent;
+  flex: 1;
 }
 
-/* Ajustes para ion-input */
-ion-input.register__input {
+ion-input.login__input {
   --background: var(--login-input-bg);
   --border-color: var(--login-border-color);
   --padding-start: 10px;
@@ -101,38 +124,26 @@ ion-input.register__input {
   --color: var(--login-text-color);
 }
 
-/* Ajustes para ion-input--password */
-ion-input.register__input--password {
-  --padding-end: 40px; /* Espacio para el ícono */
-  --border-width: 0; /* Sin borde */
-  --background: transparent; /* Fondo transparente */
+ion-input.login__input--password {
+  --padding-end: 40px;
+  --border-width: 0;
+  --background: transparent;
   flex: 1;
 }
 
-.register__input::placeholder {
+.login__input::placeholder {
   color: var(--login-placeholder-color);
 }
 
-.register__checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.register__checkbox {
-  cursor: pointer;
-}
-
-.register__terms-label {
-  font-size: 0.9rem;
-}
-
-.register__terms-link {
+.login__forgot-link {
   color: var(--login-button-color);
+  align-self: flex-end;
+  margin-top: -10px;
+  font-size: 0.9em;
   text-decoration: none;
 }
 
-.register__button {
+.login__button {
   background-color: var(--login-button-color);
   border: none;
   padding: 12px;
@@ -144,8 +155,7 @@ ion-input.register__input--password {
   width: 100%;
 }
 
-/* Ajustes para ion-button */
-ion-button.register__button {
+ion-button.login__button {
   --background: var(--login-button-color);
   --color: var(--button-text-color);
   --border-radius: 5px;
@@ -156,95 +166,62 @@ ion-button.register__button {
   border: none;
 }
 
-.register__button:hover {
+.login__button:hover {
   background-color: var(--login-button-hover);
   border: none;
 }
 
-ion-button.register__button:hover {
+ion-button.login__button:hover {
   --background: var(--login-button-hover);
   border: none;
 }
 
-.register__button:disabled {
+.login__button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }
 
-ion-button.register__button:disabled {
+ion-button.login__button:disabled {
   --background: #cccccc;
   cursor: not-allowed;
 }
 
-.register__divider {
+.login__divider {
   text-align: center;
   margin: 10px 0;
   font-size: 0.9rem;
   opacity: 0.8;
 }
 
-.register__password-wrapper {
-  width: 100%;
-}
-
-.register__password-container {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  border: 1px solid var(--login-border-color); /* Borde por defecto */
-  border-radius: 5px;
-  background-color: var(--login-input-bg); /* Fondo del contenedor */
-}
-
-.register__password-toggle {
-  cursor: pointer;
-  padding: 0 10px;
-  border: none;
-  background: none;
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-.register__password-icon {
-  width: 20px;
-  height: 20px;
-}
-
-.register__input--error {
-  border: 1px solid red !important;
-}
-
-.register__input--valid {
-  border: 1px solid green !important;
-}
-
-/* Ajustes para errores y validaciones en ion-input */
-ion-input.register__input--error {
-  --border-color: red !important;
-  border: 1px solid red !important;
-}
-
-ion-input.register__input--valid {
-  --border-color: green !important;
-  border: 1px solid green !important;
-}
-
-.register__validation-messages {
+.login__validation-messages {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.register__validation-message {
+.login__validation-message {
   font-size: 0.8rem;
   margin-top: 2px;
   text-align: left;
   color: red;
 }
 
-.register__input-group .register__input-wrapper {
-  flex: 1;
+.login__input--error {
+  border: 1px solid red !important;
+}
+
+.login__input--valid {
+  border: 1px solid green !important;
+}
+
+ion-input.login__input--error {
+  --border-color: red !important;
+  border: 1px solid red !important;
+}
+
+ion-input.login__input--valid {
+  --border-color: green !important;
+  border: 1px solid green !important;
 }
 
 .social-buttons {
@@ -291,29 +268,13 @@ ion-content.ion-page::part(scroll) {
 }
 
 @media (max-width: 742px) {
-
-  .register {
+  .login {
     flex-direction: column;
   }
-  div.panel-image {
+  .panel-image {
     display: none;
   }
-
-  .register__panel {
+  .login__panel {
     width: 100%;
   }
-  .register__input-group {
-    flex-direction: column;
-  }
 }
-
-.panel-image {
-  width: 50vw;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 20px;
-  position: relative;
-}
-

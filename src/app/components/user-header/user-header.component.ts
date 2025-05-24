@@ -18,7 +18,7 @@ import { User } from '../../models/user';
 })
 export class UserHeaderComponent implements OnInit {
   isRegistered: boolean = false;
-  userPhoto: string = '/images/avatar.jpg';
+  userPhoto: string = 'assets/avatar.jpg';
 
   private _authStateService = inject(AuthStateService);
   private _router = inject(Router);
@@ -37,7 +37,7 @@ export class UserHeaderComponent implements OnInit {
       if (user) {
         this.loadUserData(user);
       } else {
-        this.userPhoto = '/images/avatar.jpg';
+        this.userPhoto = 'assets/avatar.jpg';
         this._popupService.setUserPhoto(this.userPhoto);
         if (isPlatformBrowser(this._platformId)) {
           localStorage.removeItem('userPhoto');
@@ -58,7 +58,7 @@ export class UserHeaderComponent implements OnInit {
 
     this._authService.getUserById(user.uid).subscribe({
       next: (userData: User | null) => {
-        this.userPhoto = userData?.imageUrl || '/images/avatar.jpg';
+        this.userPhoto = userData?.imageUrl || 'assets/avatar.jpg';
         this._popupService.setUserPhoto(this.userPhoto);
         if (isPlatformBrowser(this._platformId)) {
           localStorage.setItem('userPhoto', this.userPhoto);
@@ -66,7 +66,7 @@ export class UserHeaderComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading user data:', error);
-        this.userPhoto = '/images/avatar.jpg';
+        this.userPhoto = 'assets/avatar.jpg';
         this._popupService.setUserPhoto(this.userPhoto);
         if (isPlatformBrowser(this._platformId)) {
           localStorage.setItem('userPhoto', this.userPhoto);

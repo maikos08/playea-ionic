@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   isRegistered: boolean = false;
   isPopupOpen: boolean = false;
-  userPhoto: string = '/images/avatar.jpg';
+  userPhoto: string = 'assets/avatar.jpg';
 
   private _popupService = inject(PopupService);
   private _authService = inject(AuthService);
