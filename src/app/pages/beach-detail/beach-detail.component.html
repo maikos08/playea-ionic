@@ -1,0 +1,22 @@
+<ion-content class="ion-padding">
+  <ion-grid class="beach-detail-container">
+    <!-- Loading State -->
+    <ion-row *ngIf="loading">
+      <ion-col size="12">
+        <ion-text class="ion-text-center loading-text">
+          Cargando...
+        </ion-text>
+      </ion-col>
+    </ion-row>
+
+    <!-- Beach Details or Error Message -->
+    <ion-row *ngIf="!loading">
+      <ion-col size="12">
+        <app-beach-detail-layout [beach]="beach"></app-beach-detail-layout>
+        <ion-text *ngIf="!beach" class="ion-text-center">
+          Playa no encontrada
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
