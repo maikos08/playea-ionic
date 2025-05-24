@@ -6,6 +6,7 @@ import { togglePasswordView } from '../../../utils/toggle-password-view';
 import { isRequired, hasEmailError, hasPasswordLengthError, hasPasswordMatchError } from '../../../utils/validators';
 import { AuthService } from '../../../services/auth.service';
 import { IonContent, IonInput, IonButton, IonCheckbox } from '@ionic/angular/standalone';
+import { ToastController } from '@ionic/angular';
 
 interface RegisterForm {
   firstName: FormControl<string>;
@@ -34,9 +35,11 @@ export class RegisterComponent {
   passwordVisible = false;
   confirmPasswordVisible = false;
   isLoading = false;
+
   private _formBuilder = inject(NonNullableFormBuilder);
   private _router = inject(Router);
   private _authService = inject(AuthService);
+  private _toastCtrl = inject(ToastController);
 
   registerForm = this._formBuilder.group<RegisterForm>({
     firstName: this._formBuilder.control('', [Validators.required]),
@@ -47,7 +50,7 @@ export class RegisterComponent {
     terms: this._formBuilder.control(false, [Validators.requiredTrue]),
   });
 
-  isRequired(field: 'firstName' | 'lastName' | 'email' | 'password' | 'confirmPassword' | 'terms') {
+  isRequired(field: keyof RegisterForm) {
     return isRequired(field, this.registerForm);
   }
 
@@ -76,17 +79,36 @@ export class RegisterComponent {
   async onSubmit() {
     if (this.registerForm.invalid || this.hasPasswordMatchError()) {
       this.registerForm.markAllAsTouched();
+      await this.showToast('Por favor completa correctamente el formulario', 'danger');
       return;
     }
 
     this.isLoading = true;
     try {
       const { firstName, lastName, email, password } = this.registerForm.value;
-      await this._authService.register({ firstName: firstName!, lastName: lastName!, email: email!, password: password! });
+      await this._authService.register({
+        firstName: firstName!,
+        lastName: lastName!,
+        email: email!,
+        password: password!
+      });
+      await this.showToast('Registro exitoso', 'success');
       this._router.navigate(['/']);
     } catch (error: any) {
+      console.error('Error en el registro:', error);
+      await this.showToast('Error al registrarse. Intenta nuevamente.', 'danger');
     } finally {
       this.isLoading = false;
     }
+  }
+
+  private async showToast(message: string, color: 'success' | 'danger' = 'success') {
+    const toast = await this._toastCtrl.create({
+      message,
+      duration: 2000,
+      color,
+      position: 'bottom',
+    });
+    await toast.present();
   }
 }

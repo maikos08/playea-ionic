@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { UserHeaderComponent } from '../user-header/user-header.component';
 import { PopupService } from '../../services/popup.service';
 import { AuthService } from '../../services/auth.service';
@@ -20,6 +20,7 @@ export class HeaderComponent implements OnInit {
   private _popupService = inject(PopupService);
   private _authService = inject(AuthService);
   private _router = inject(Router);
+  private _toastCtrl = inject(ToastController);
 
   ngOnInit(): void {
     this._popupService.isPopupVisible$.subscribe((visible) => {
@@ -39,10 +40,22 @@ export class HeaderComponent implements OnInit {
     try {
       await this._authService.logout();
       this._popupService.closePopup();
+      await this.showToast('Sesión cerrada exitosamente', 'success');
       this._router.navigate(['/auth/login']);
     } catch (error) {
       console.error('Logout error:', error);
+      await this.showToast('Error al cerrar sesión', 'danger');
     }
+  }
+
+  private async showToast(message: string, color: 'success' | 'danger' = 'success') {
+    const toast = await this._toastCtrl.create({
+      message,
+      duration: 2000,
+      color,
+      position: 'bottom',
+    });
+    await toast.present();
   }
 
   @HostListener('document:click', ['$event'])
