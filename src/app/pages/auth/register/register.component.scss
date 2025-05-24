@@ -1,0 +1,319 @@
+.register {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: var(--login-secondary-bg);
+  overflow: hidden;
+}
+
+.register__panel {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  text-align: center;
+}
+
+.panel-image {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  position: relative;
+}
+
+.register__logo {
+  color: #000;
+}
+
+.register__title-icon {
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.register__title {
+  font-size: 2.5rem;
+  display: flex;
+}
+
+.register__subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.register__text {
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+.register__link {
+  color: var(--login-button-color);
+  text-decoration: none;
+}
+
+.register__form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: left;
+  width: 100%;
+  max-width: 500px;
+}
+
+.register__input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.register__input-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.register__input {
+  background-color: var(--login-input-bg);
+  border: 1px solid var(--login-border-color);
+  padding: 10px;
+  border-radius: 5px;
+  color: var(--login-text-color);
+  width: 100%;
+}
+
+.register__input--password {
+  padding-right: 40px; /* Espacio para el ícono */
+  border: none; /* Sin borde en el input */
+  background: transparent; /* Fondo transparente */
+  flex: 1; /* Ocupa el espacio disponible */
+}
+
+/* Ajustes para ion-input */
+ion-input.register__input {
+  --background: var(--login-input-bg);
+  --border-color: var(--login-border-color);
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --border-radius: 5px;
+  --color: var(--login-text-color);
+}
+
+/* Ajustes para ion-input--password */
+ion-input.register__input--password {
+  --padding-end: 40px; /* Espacio para el ícono */
+  --border-width: 0; /* Sin borde */
+  --background: transparent; /* Fondo transparente */
+  flex: 1;
+}
+
+.register__input::placeholder {
+  color: var(--login-placeholder-color);
+}
+
+.register__checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.register__checkbox {
+  cursor: pointer;
+}
+
+.register__terms-label {
+  font-size: 0.9rem;
+}
+
+.register__terms-link {
+  color: var(--login-button-color);
+  text-decoration: none;
+}
+
+.register__button {
+  background-color: var(--login-button-color);
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  color: var(--button-text-color);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+}
+
+/* Ajustes para ion-button */
+ion-button.register__button {
+  --background: var(--login-button-color);
+  --color: var(--button-text-color);
+  --border-radius: 5px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  font-size: 1rem;
+  width: 100%;
+  border: none;
+}
+
+.register__button:hover {
+  background-color: var(--login-button-hover);
+  border: none;
+}
+
+ion-button.register__button:hover {
+  --background: var(--login-button-hover);
+  border: none;
+}
+
+.register__button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+ion-button.register__button:disabled {
+  --background: #cccccc;
+  cursor: not-allowed;
+}
+
+.register__divider {
+  text-align: center;
+  margin: 10px 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.register__password-wrapper {
+  width: 100%;
+}
+
+.register__password-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 1px solid var(--login-border-color); /* Borde por defecto */
+  border-radius: 5px;
+  background-color: var(--login-input-bg); /* Fondo del contenedor */
+}
+
+.register__password-toggle {
+  cursor: pointer;
+  padding: 0 10px;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.register__password-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.register__input--error {
+  border: 1px solid red !important;
+}
+
+.register__input--valid {
+  border: 1px solid green !important;
+}
+
+/* Ajustes para errores y validaciones en ion-input */
+ion-input.register__input--error {
+  --border-color: red !important;
+  border: 1px solid red !important;
+}
+
+ion-input.register__input--valid {
+  --border-color: green !important;
+  border: 1px solid green !important;
+}
+
+.register__validation-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.register__validation-message {
+  font-size: 0.8rem;
+  margin-top: 2px;
+  text-align: left;
+  color: red;
+}
+
+.register__input-group .register__input-wrapper {
+  flex: 1;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.social-buttons__button {
+  background: none;
+  border: 1px solid var(--login-border-color);
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: var(--login-text-color);
+  cursor: pointer;
+  transition: border 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.social-buttons__button:hover {
+  border-color: var(--login-button-color);
+}
+
+.panel-image__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.12);
+}
+
+ion-content.ion-page {
+  --background: transparent;
+  --overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+ion-content.ion-page::part(scroll) {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 742px) {
+
+  .register {
+    flex-direction: column;
+  }
+  div.panel-image {
+    display: none;
+  }
+
+  .register__panel {
+    width: 100%;
+  }
+  .register__input-group {
+    flex-direction: column;
+  }
+}
+
+.panel-image {
+  width: 50vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  position: relative;
+}
+

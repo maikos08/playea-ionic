@@ -5,11 +5,11 @@ export function togglePasswordView(inputId: string, iconId: string): void {
     if (passwordInput && toggleIcon) {
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
-            toggleIcon.src = "/images/Showing.png"; // Ícono para "ocultar" cuando se muestra
+            toggleIcon.src = "playea-ionic/src/assets/NotShowing.png"; // Ícono para "ocultar" cuando se muestra
             toggleIcon.alt = "Ocultar contraseña";
         } else {
             passwordInput.type = "password";
-            toggleIcon.src = "/images/NotShowing.png"; // Ícono para "mostrar" cuando está oculta
+            toggleIcon.src = "playea-ionic/src/assets/Showing.png"; // Ícono para "mostrar" cuando está oculta
             toggleIcon.alt = "Mostrar contraseña";
         }
     } else {

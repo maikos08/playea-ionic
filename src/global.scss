@@ -87,8 +87,6 @@ main {
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
-  --background: transparent; /* Cambia el fondo a transparente */
-  --ion-background-color: transparent; /* Asegura que no haya fondo */
 }
 
 a {
@@ -126,6 +124,6 @@ app-beach-card {
   justify-self: center;
 }
 
-ion-content {
+ion-content, ion-grid {
   --background: #fff;
 }

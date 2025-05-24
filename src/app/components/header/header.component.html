@@ -1,14 +1,12 @@
-<ion-header class="header">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-        <div class="logo">
-          <a href="/">
-            <img class="logo__image" src="./../../../assets/icon/playea-logo.png" alt="Logo Playea">
-          </a>
-        </div>
-    </ion-buttons>
-
-    <app-user-header></app-user-header>
+<ion-header class="header" [translucent]="true">
+  <ion-toolbar class="toolbar">
+    <div class="logo">
+      <a href="/">
+        <img class="logo__image" src="./../../../assets/icon/playea-logo.png" alt="Logo Playea">
+      </a>
+    </div>
+    <div slot="end">
+      <app-user-header></app-user-header>
+    </div>
   </ion-toolbar>
 </ion-header>
-

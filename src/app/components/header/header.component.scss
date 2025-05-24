@@ -1,15 +1,6 @@
 /* Blocks */
 .header {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: center;
   width: 100%;
-  background-color: var(--header-background, #fff);
-  color: var(--header-text-color, #000);
-  padding: 0 4vw;
-  height: 4rem;
-  border-bottom: 1px solid var(--header-border-color, #ddd);
   position: sticky;
   top: 0;
   left: 0;
@@ -18,67 +9,45 @@
   box-sizing: border-box;
 }
 
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px; /* Minimal padding for spacing */
+}
+
 /* Elements */
 .logo {
   height: 100%;
-  object-fit: cover;
-  overflow: hidden; /* Añade esto para recortar el desborde */
+  display: flex;
+  align-items: center;
 }
 
 .logo__image {
-  width: 100%;
-  max-width: 50px;
-  max-height: 50px;
-  height: 100%;
-  object-fit: fill;
+  width: 40px; /* Adjusted to match the small logo size in the image */
+  height: 40px;
+  object-fit: contain; /* Ensures the logo isn't distorted */
   object-position: center;
 }
 
-
-.header__nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.header__nav-list {
-  display: flex;
-  list-style: none;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-}
-
+/* Remove unused styles for now since they're not in the image */
+.header__nav,
+.header__nav-list,
 .header__nav-link {
-  font-size: 1.5rem;
-  text-decoration: none;
-  color: var(--header-text-color, #000);
-  transition: color 0.3s ease-in-out;
+  display: none; /* Navigation links aren't shown in the image */
 }
-
-.header__nav-link:hover {
-  color: var(--header-hover-color, #ccc);
-}
-
 
 /* Media Queries */
 @media (max-width: 768px) {
-  .header__nav {
-      width: 80%;
-  }
-
-  .header__nav-link {
-      font-size: 1.2rem;
+  .logo__image {
+    width: 35px; /* Slightly smaller logo on smaller screens */
+    height: 35px;
   }
 }
 
 @media (max-width: 550px) {
-  .header__nav {
-      display: none;
-  }
-
-  .popup__nav-button--mobile {
-      display: flex;
+  .logo__image {
+    width: 30px; /* Even smaller for mobile */
+    height: 30px;
   }
 }
