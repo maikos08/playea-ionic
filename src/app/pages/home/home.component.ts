@@ -5,12 +5,13 @@ import { Beach } from 'src/app/models/beach';
 import { beachesList } from 'src/app/constants/beaches-list';
 import { BeachService } from 'src/app/services/beach.service';
 import { IonContent, IonSpinner, IonGrid } from "@ionic/angular/standalone";
+import { HeaderAlignmentComponent } from 'src/app/components/header-alignment/header-alignment.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [IonGrid, IonSpinner, IonContent, BeachGridComponent, CommonModule,]
+  imports: [IonGrid, IonSpinner, IonContent, BeachGridComponent, CommonModule, HeaderAlignmentComponent]
 })
 export class HomeComponent implements OnInit {
   beaches: Beach[] = beachesList;

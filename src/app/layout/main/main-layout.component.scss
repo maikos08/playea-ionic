@@ -1,15 +1,12 @@
-/* BLOQUE PRINCIPAL */
 .main-layout {
-  min-height: 100vh;
+  height: 100vh; /* ✅ OBLIGATORIO */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  position: relative;
   width: 100%;
+  position: relative;
 }
 
-/* Asegurar que ion-content ocupe el espacio disponible */
 .main-layout ion-content {
   --background: #fff;
   --padding-start: 0;
@@ -17,15 +14,8 @@
   --padding-top: 0;
   --padding-bottom: 0;
   flex-grow: 1;
-  overflow: auto;
 }
 
-/* Ajustar el padding superior para respetar la altura del header */
-.main-layout ion-content::part(scroll) {
-  padding-top: var(--ion-safe-area-top, 0); /* Respeta la barra de estado en dispositivos móviles */
-}
-
-/* ELEMENTOS */
 .main-layout__header {
   width: 100%;
 }
@@ -33,19 +23,6 @@
 .main-layout__content {
   width: 100%;
   flex-grow: 1;
-}
-
-/* Ajustes para el footer dentro de ion-content */
-.main-layout__footer {
-  width: 100%;
-  background-color: var(--hover-darken);
-  color: var(--footer-text-color);
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-/* Ajustes para Ionic */
-ion-header {
   --background: transparent;
-  padding: 0;
+  --ion-background-color: transparent;
 }
