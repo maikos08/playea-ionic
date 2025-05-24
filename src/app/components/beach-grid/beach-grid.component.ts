@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { BeachCardComponent } from '../beach-card/beach-card.component';
 import { Beach } from '../../models/beach';
 import { beachesList } from '../../constants/beaches-list';
@@ -12,17 +12,19 @@ import { beachesList } from '../../constants/beaches-list';
   templateUrl: './beach-grid.component.html',
   styleUrls: ['./beach-grid.component.scss'],
 })
-export class BeachGridComponent {
+export class BeachGridComponent implements OnInit {
   @Input() beaches: Beach[] = [];
   @Input() showEmptyState: boolean = false;
   // beachService = inject(BeachService);
   uploadStatus: string = '';
   beachesJson: Beach[] = beachesList;
-  
+
   trackById(index: number, beach: Beach): string {
     return beach.id;
   }
-  
+  ngOnInit() {
+    console.log('Number of beaches:', this.beaches.length);
+  }
   /* async loadBeachesToFirebase(): Promise<void> {
     try {
       await this.beachService.createBeaches(this.beachesJson);
