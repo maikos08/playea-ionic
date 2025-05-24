@@ -14,18 +14,17 @@ import { HeaderAlignmentComponent } from 'src/app/components/header-alignment/he
   imports: [IonGrid, IonSpinner, IonContent, BeachGridComponent, CommonModule, HeaderAlignmentComponent]
 })
 export class HomeComponent implements OnInit {
-  beaches: Beach[] = beachesList;
+  beaches: Beach[] = [];
   loading = false;
 
   constructor(private beachService: BeachService) {}
   ngOnInit() {
-    /* this.loading = true;
-    this.beachService.createBeaches(this.beaches).then(() => {
-      console.log('Beaches created successfully');
+    this.loading = true;
+    this.beachService.getAllBeaches().subscribe((beaches) => {
+      this.beaches = beaches;
       this.loading = false;
-    }).catch((error) => {
-      console.error('Error creating beaches:', error);
-      this.loading = false;
-    }); */
+    });
+    console.log('beaches', this.beaches);
+    console.log('beachesList', beachesList);
   }
 }
