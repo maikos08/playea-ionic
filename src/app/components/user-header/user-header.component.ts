@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostListener, PLATFORM_ID, Inject, inject } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthStateService } from '../../services/auth-state.service';
 import { AuthService } from '../../services/auth.service';
+import { PopupService } from '../../services/popup.service';
 import { isPlatformBrowser } from '@angular/common';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { User } from '../../models/user';
@@ -13,16 +14,16 @@ import { User } from '../../models/user';
   templateUrl: './user-header.component.html',
   styleUrls: ['./user-header.component.scss'],
   imports: [IonicModule, CommonModule],
-  standalone: true
+  standalone: true,
 })
 export class UserHeaderComponent implements OnInit {
   isRegistered: boolean = false;
-  isPopupVisible: boolean = false;
   userPhoto: string = '/images/avatar.jpg';
 
   private _authStateService = inject(AuthStateService);
   private _router = inject(Router);
   private _authService = inject(AuthService);
+  private _popupService = inject(PopupService);
   private _platformId = inject(PLATFORM_ID);
 
   ngOnInit(): void {
@@ -32,10 +33,12 @@ export class UserHeaderComponent implements OnInit {
 
     this._authStateService.user$.subscribe((user) => {
       this.isRegistered = !!user;
+      this._popupService.setIsRegistered(this.isRegistered);
       if (user) {
         this.loadUserData(user);
       } else {
         this.userPhoto = '/images/avatar.jpg';
+        this._popupService.setUserPhoto(this.userPhoto);
         if (isPlatformBrowser(this._platformId)) {
           localStorage.removeItem('userPhoto');
         }
@@ -48,6 +51,7 @@ export class UserHeaderComponent implements OnInit {
       const cachedPhoto = localStorage.getItem('userPhoto');
       if (cachedPhoto) {
         this.userPhoto = cachedPhoto;
+        this._popupService.setUserPhoto(this.userPhoto);
         return;
       }
     }
@@ -55,6 +59,7 @@ export class UserHeaderComponent implements OnInit {
     this._authService.getUserById(user.uid).subscribe({
       next: (userData: User | null) => {
         this.userPhoto = userData?.imageUrl || '/images/avatar.jpg';
+        this._popupService.setUserPhoto(this.userPhoto);
         if (isPlatformBrowser(this._platformId)) {
           localStorage.setItem('userPhoto', this.userPhoto);
         }
@@ -62,6 +67,7 @@ export class UserHeaderComponent implements OnInit {
       error: (error) => {
         console.error('Error loading user data:', error);
         this.userPhoto = '/images/avatar.jpg';
+        this._popupService.setUserPhoto(this.userPhoto);
         if (isPlatformBrowser(this._platformId)) {
           localStorage.setItem('userPhoto', this.userPhoto);
         }
@@ -74,34 +80,22 @@ export class UserHeaderComponent implements OnInit {
       const cachedPhoto = localStorage.getItem('userPhoto');
       if (cachedPhoto && this.isRegistered) {
         this.userPhoto = cachedPhoto;
+        this._popupService.setUserPhoto(this.userPhoto);
       }
     }
   }
 
   togglePopup(): void {
-    this.isPopupVisible = !this.isPopupVisible;
-  }
-
-  closePopup(): void {
-    this.isPopupVisible = false;
+    this._popupService.togglePopup();
   }
 
   async logout(): Promise<void> {
     try {
       await this._authService.logout();
-      this.closePopup();
+      this._popupService.closePopup();
       this._router.navigate(['/auth/login']);
     } catch (error) {
       console.error('Logout error:', error);
-    }
-  }
-
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: Event): void {
-    if (!this.isPopupVisible) return;
-    const target = event.target as HTMLElement;
-    if (!target.closest('.popup__container') && !target.closest('.user-header__menu-toggle')) {
-      this.closePopup();
     }
   }
 }

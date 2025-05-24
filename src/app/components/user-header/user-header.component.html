@@ -1,31 +1,12 @@
-<div>
-  <div class="user-header">
-    <div *ngIf="!isRegistered" class="user-header__auth-buttons">
-      <a href="/auth/login" class="user-header__button user-header__button--login">Login</a>
-      <a href="/auth/register" class="user-header__button user-header__button--register">Register</a>
-    </div>
+<div class="user-header">
+  <div *ngIf="!isRegistered" class="user-header__auth-buttons">
+    <a href="/auth/login" class="user-header__button user-header__button--login">Login</a>
+    <a href="/auth/register" class="user-header__button user-header__button--register">Register</a>
+  </div>
 
-    <div *ngIf="isRegistered" class="user-header__user-menu">
-      <a class="user-header__menu-toggle" (click)="togglePopup()">
-        <img [src]="userPhoto" class="user-header__menu-icon" alt="User Avatar">
-      </a>
-    </div>
-
-    <div *ngIf="isRegistered && isPopupVisible" class="user-header__popup">
-      <div class="popup__container">
-        <img [src]="userPhoto" alt="UserIcon" class="popup__image">
-        <div class="popup__account-buttons">
-          <a href="/auth/login" class="popup__account-button popup__account-link">Cambiar Cuenta</a>
-          <a (click)="logout()" class="popup__account-button popup__account-link">Cerrar Sesión</a>
-        </div>
-        <div class="popup__nav-buttons">
-          <a href="/profile" class="popup__nav-button popup__nav-link">Perfil</a>
-          <a href="/favourites" class="popup__nav-button popup__nav-link">Favoritos</a>
-          <span class="popup__nav-button--mobile">
-            <a href="/ranking" class="popup__nav-button popup__nav-link">Ranking</a>
-          </span>
-        </div>
-      </div>
-    </div>
+  <div *ngIf="isRegistered" class="user-header__user-menu">
+    <a class="user-header__menu-toggle" (click)="togglePopup()">
+      <img [src]="userPhoto" class="user-header__menu-icon" alt="User Avatar">
+    </a>
   </div>
 </div>
