@@ -6,12 +6,7 @@ import {
 } from '@capacitor-community/sqlite';
 import { Capacitor } from '@capacitor/core';
 import { Platform, ToastController } from '@ionic/angular';
-
-export interface Item {
-  id: string;
-  title: string;
-  coverUrl: string;
-}
+import { FavoriteBeach } from './favourites.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,36 +17,31 @@ export class DatabaseService {
   private isWeb: boolean = false;
   private readonly STORAGE_KEY = 'favorites';
   private readonly STORAGE_DB = 'favoritesDB';
-  private initialized = false;
 
   private toastController = inject(ToastController);
-  private platform = inject(Platform);
 
-  constructor() {
+  constructor(private platform: Platform) {
     this.sqlite = new SQLiteConnection(CapacitorSQLite);
-    this.initOnceIfNeeded(); // call only once
+    this.init();
   }
 
-  public async initOnceIfNeeded() {
-    await this.sqlite.closeAllConnections();
-
-    if (this.initialized) return;
-
+  private async init() {
     await this.platform.ready();
     this.isWeb = Capacitor.getPlatform() === 'web';
 
     if (!this.isWeb) {
       try {
-        const existing = await this.sqlite.isConnection(this.STORAGE_DB, false);
+        const isConn = await this.sqlite.isConnection(this.STORAGE_DB, false);
 
-        let db: SQLiteDBConnection;
-
-        if (existing.result) {
-          this.showDebugToast('🔁 Retrieving existing connection...');
-          db = await this.sqlite.retrieveConnection(this.STORAGE_DB, false);
+        if (isConn.result) {
+          await this.showToast('🔄 Reusing existing SQLite connection');
+          this.db = await this.sqlite.retrieveConnection(
+            this.STORAGE_DB,
+            false
+          );
         } else {
-          this.showDebugToast('🆕 Creating new SQLite connection...');
-          db = await this.sqlite.createConnection(
+          await this.showToast('🆕 Creating new SQLite connection');
+          this.db = await this.sqlite.createConnection(
             this.STORAGE_DB,
             false,
             'no-encryption',
@@ -60,144 +50,109 @@ export class DatabaseService {
           );
         }
 
-        await db.open();
-        this.db = db;
+        const isOpen = await this.db.isDBOpen();
+        if (!isOpen) {
+          await this.db.open();
+          await this.showToast('✅ DB opened');
+        }
 
-        await db.execute(`
-        CREATE TABLE IF NOT EXISTS favorites (
-          id TEXT PRIMARY KEY,
-          title TEXT,
-          coverUrl TEXT
-        );
-      `);
+        await this.db.execute(`
+          CREATE TABLE IF NOT EXISTS favorites (
+            id TEXT PRIMARY KEY,
+            name TEXT,
+            coverUrl TEXT
+          );
+        `);
 
-        this.showDebugToast('✅ SQLite connection ready');
+        await this.showToast('✅ Favorites table ready');
       } catch (error: any) {
-        console.error('SQLite init error:', error);
-        this.showDebugToast(`❌ SQLite init failed: ${error.message || error}`);
+        console.error('Error opening SQLite database', error);
+        await this.showToast(
+          `❌ SQLite init failed: ${error.message || error}`
+        );
       }
     } else {
-      this.showDebugToast('ℹ️ Web mode using localStorage');
+      await this.showToast('ℹ️ Using localStorage on Web');
     }
-
-    this.initialized = true;
   }
 
-  async addFavorite(item: Item): Promise<void> {
-    await this.initOnceIfNeeded();
-
-    try {
-      if (this.isWeb) {
-        const favorites = await this.getFavorites();
-        const exists = favorites.some((fav) => fav.id === item.id);
-        if (!exists) {
-          favorites.push(item);
-          localStorage.setItem(this.STORAGE_KEY, JSON.stringify(favorites));
-          this.showDebugToast(`Web: Added ${item.title}`);
-        } else {
-          this.showDebugToast(`Web: ${item.title} already exists`);
-        }
-      } else if (this.db) {
-        await this.db.run(
-          `INSERT OR REPLACE INTO favorites (id, title, coverUrl) VALUES (?, ?, ?)`,
-          [item.id, item.title, item.coverUrl]
-        );
-        this.showDebugToast(`SQLite: Added ${item.title}`);
+  async addFavorite(item: FavoriteBeach): Promise<void> {
+    if (this.isWeb) {
+      const favorites = await this.getFavorites();
+      const exists = favorites.some((fav) => fav.id === item.id);
+      if (!exists) {
+        favorites.push(item);
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(favorites));
+        await this.showToast(`Web: Added ${item.name}`);
       }
-    } catch (err: any) {
-      this.showDebugToast(`❌ addFavorite error: ${err.message}`);
+    } else if (this.db) {
+      await this.db.run(
+        `INSERT OR REPLACE INTO favorites (id, name, coverUrl) VALUES (?, ?, ?)`,
+        [item.id, item.name, item.coverUrl]
+      );
+      await this.showToast(`SQLite: Added ${item.name}`);
     }
   }
 
   async removeFavorite(id: string): Promise<void> {
-    await this.initOnceIfNeeded();
-
-    try {
-      if (this.isWeb) {
-        const favorites = await this.getFavorites();
-        const updatedFavorites = favorites.filter((fav: any) => fav.id !== id);
-        localStorage.setItem(
-          this.STORAGE_KEY,
-          JSON.stringify(updatedFavorites)
-        );
-        this.showDebugToast(`Web: Removed item ${id}`);
-      } else if (this.db) {
-        await this.db.run(`DELETE FROM favorites WHERE id = ?`, [id]);
-        this.showDebugToast(`SQLite: Removed item ${id}`);
-      }
-    } catch (err: any) {
-      this.showDebugToast(`❌ removeFavorite error: ${err.message}`);
+    if (this.isWeb) {
+      const favorites = await this.getFavorites();
+      const updatedFavorites = favorites.filter((fav: any) => fav.id !== id);
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedFavorites));
+      await this.showToast(`Web: Removed ${id}`);
+    } else if (this.db) {
+      await this.db.run(`DELETE FROM favorites WHERE id = ?`, [id]);
+      await this.showToast(`SQLite: Removed ${id}`);
     }
   }
 
-  async getFavorites(): Promise<Item[]> {
-    await this.initOnceIfNeeded();
-
-    try {
-      if (this.isWeb) {
-        const stored = localStorage.getItem(this.STORAGE_KEY);
-        const data = stored ? JSON.parse(stored) : [];
-        this.showDebugToast(`Web: Loaded ${data.length} favorites`);
-        return data;
-      } else if (this.db) {
-        const res = await this.db.query(`SELECT * FROM favorites`);
-        this.showDebugToast(
-          `SQLite: Loaded ${res.values?.length ?? 0} favorites`
-        );
-        return res.values ?? [];
-      }
-    } catch (err: any) {
-      this.showDebugToast(`❌ getFavorites error: ${err.message}`);
+  async getFavorites(): Promise<FavoriteBeach[]> {
+    if (this.isWeb) {
+      const stored = localStorage.getItem(this.STORAGE_KEY);
+      const data = stored ? JSON.parse(stored) : [];
+      await this.showToast(`Web: Loaded ${data.length} favorites`);
+      return data;
+    } else if (this.db) {
+      const res = await this.db.query(`SELECT * FROM favorites`);
+      await this.showToast(
+        `SQLite: Loaded ${res.values?.length ?? 0} favorites`
+      );
+      return res.values ?? [];
     }
-
     return [];
   }
 
   async isFavorite(id: string): Promise<boolean> {
-    await this.initOnceIfNeeded();
-
-    try {
-      if (this.isWeb) {
-        const favorites = await this.getFavorites();
-        const result = favorites.some((fav: any) => fav.id === id);
-        this.showDebugToast(`Web: isFavorite ${id}: ${result}`);
-        return result;
-      } else if (this.db) {
-        const res = await this.db.query(
-          `SELECT id FROM favorites WHERE id = ?`,
-          [id]
-        );
-        const result = !!(res.values && res.values.length > 0);
-        this.showDebugToast(`SQLite: isFavorite ${id}: ${result}`);
-        return result;
-      }
-    } catch (err: any) {
-      this.showDebugToast(`❌ isFavorite error: ${err.message}`);
+    if (this.isWeb) {
+      const favorites = await this.getFavorites();
+      const result = favorites.some((fav: any) => fav.id === id);
+      await this.showToast(`Web: isFavorite ${id}: ${result}`);
+      return result;
+    } else if (this.db) {
+      const res = await this.db.query(`SELECT id FROM favorites WHERE id = ?`, [
+        id,
+      ]);
+      const result = !!(res.values && res.values.length > 0);
+      await this.showToast(`SQLite: isFavorite ${id}: ${result}`);
+      return result;
     }
-
     return false;
   }
 
   async clearFavorites(): Promise<void> {
-    await this.initOnceIfNeeded();
-
-    try {
-      if (this.isWeb) {
-        localStorage.removeItem(this.STORAGE_KEY);
-        this.showDebugToast('Web: Cleared favorites');
-      } else if (this.db) {
-        await this.db.execute(`DELETE FROM favorites`);
-        this.showDebugToast('SQLite: Cleared favorites');
-      }
-    } catch (err: any) {
-      this.showDebugToast(`❌ clearFavorites error: ${err.message}`);
+    if (this.isWeb) {
+      localStorage.removeItem(this.STORAGE_KEY);
+      await this.showToast('Web: Cleared favorites');
+    } else if (this.db) {
+      await this.db.execute(`DELETE FROM favorites`);
+      await this.showToast('SQLite: Cleared favorites');
     }
   }
 
-  private async showDebugToast(message: string) {
+  private async showToast(message: string) {
     const toast = await this.toastController.create({
       message,
-      duration: 2500,
+      duration: 2000,
       color: 'medium',
       position: 'bottom',
     });

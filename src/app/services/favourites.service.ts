@@ -1,8 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Capacitor } from '@capacitor/core';
 import { Observable, from, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { DatabaseService, Item } from './database.service';
+import { DatabaseService } from './database.service';
 
 export interface FavoriteBeach {
   id: string;
@@ -13,23 +12,9 @@ export interface FavoriteBeach {
 @Injectable({ providedIn: 'root' })
 export class FavoritesService {
   private databaseService = inject(DatabaseService);
-  private isNative = Capacitor.isNativePlatform();
-
-  constructor() {
-    if (this.isNative) {
-      this.databaseService
-        .initOnceIfNeeded()
-        .catch((err) => console.error('Failed to init databaseService:', err));
-    }
-  }
 
   async addFavoriteBeach(beach: FavoriteBeach): Promise<void> {
-    const item: Item = {
-      id: beach.id,
-      title: beach.name,
-      coverUrl: beach.coverUrl,
-    };
-    await this.databaseService.addFavorite(item);
+    await this.databaseService.addFavorite(beach);
   }
 
   async removeFavoriteBeach(beachId: string): Promise<void> {
@@ -42,10 +27,10 @@ export class FavoritesService {
 
   getFavoriteBeaches(): Observable<FavoriteBeach[]> {
     return from(this.databaseService.getFavorites()).pipe(
-      map((items: Item[]) =>
+      map((items: FavoriteBeach[]) =>
         items.map((item) => ({
           id: item.id,
-          name: item.title,
+          name: item.name,
           coverUrl: item.coverUrl,
         }))
       ),
