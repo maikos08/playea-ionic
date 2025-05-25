@@ -37,6 +37,15 @@ export class DatabaseService {
 
     if (!this.isWeb) {
       try {
+        // ✅ Check if a connection already exists
+        const existing = await this.sqlite.isConnection(this.STORAGE_DB, false);
+
+        if (existing.result) {
+          this.showDebugToast('⚠️ Closing existing connection...');
+          await this.sqlite.closeConnection(this.STORAGE_DB, false);
+        }
+
+        // ✅ Now it's safe to create a new connection
         const db = await this.sqlite.createConnection(
           this.STORAGE_DB,
           false,
@@ -44,25 +53,25 @@ export class DatabaseService {
           1,
           false
         );
+
         await db.open();
         this.db = db;
-        await db.execute(`DROP TABLE IF EXISTS favorites;`);
+
         await db.execute(`
-          CREATE TABLE favorites (
-            id TEXT PRIMARY KEY,
-            title TEXT,
-            coverUrl TEXT
-          );
-        `);
-        this.showDebugToast('SQLite initialized');
-      } catch (error) {
-        console.error('Error opening SQLite database', error);
-        this.showDebugToast(
-          error instanceof Error ? error.message : 'Unknown error'
+        CREATE TABLE IF NOT EXISTS favorites (
+          id TEXT PRIMARY KEY,
+          title TEXT,
+          coverUrl TEXT
         );
+      `);
+
+        this.showDebugToast('✅ SQLite initialized and ready');
+      } catch (error: any) {
+        console.error('Error initializing SQLite:', error);
+        this.showDebugToast(`❌ SQLite init failed: ${error.message || error}`);
       }
     } else {
-      this.showDebugToast('Running in Web mode');
+      this.showDebugToast('ℹ️ Running in Web mode (localStorage)');
     }
   }
 
