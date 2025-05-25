@@ -1,0 +1,114 @@
+.beach-comments {
+  margin-top: 30px;
+  max-width: 100%;
+  /* Eliminar cualquier alto definido para permitir que crezca según el contenido */
+}
+
+.beach-comments__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.beach-comments__list {
+  margin-bottom: 30px;
+}
+
+.beach-comments__add {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.beach-comments__add-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.beach-comments__form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.beach-comments__rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.beach-comments__rating-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.beach-comments__star {
+  width: 24px;
+  height: 24px;
+}
+
+.beach-comments__star.fill-current.text-yellow-500 {
+  fill: #facc15; /* Yellow color for filled stars */
+  stroke: #facc15;
+}
+
+.beach-comments__star.text-gray-300 {
+  fill: #d1d5db; /* Gray color for unfilled stars */
+  stroke: #d1d5db;
+}
+
+.beach-comments__textarea {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: 'Arial', sans-serif;
+  height: 100px;
+  resize: vertical;
+}
+
+.beach-comments__submit {
+  align-self: flex-end;
+  padding: 10px 20px;
+  background-color: #3880ff; /* Reemplazar variable de Ionic por un color fijo */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.beach-comments__submit:hover {
+  background-color: #5595ff; /* Reemplazar variable de Ionic por un color fijo */
+}
+
+.beach-comments__submit:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .beach-comments__title {
+    font-size: 1.3rem;
+  }
+
+  .beach-comments__add-title {
+    font-size: 1.1rem;
+  }
+
+  .beach-comments__star {
+    width: 20px;
+    height: 20px;
+  }
+
+  .beach-comments__textarea {
+    height: 80px;
+  }
+}

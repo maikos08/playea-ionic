@@ -14,6 +14,14 @@
     <ion-row *ngIf="!loading">
       <ion-col size="12">
         <app-beach-detail-layout [beach]="beach"></app-beach-detail-layout>
+        <app-beach-comments
+          [comments]="comments"
+        [currentUser]="currentUser"
+        [beach]="beach"
+        (addComment)="addComment($event)"
+        (deleteComment)="onDeleteComment($event)"
+        (updateComment)="onUpdateComment($event)">
+        </app-beach-comments>
         <ion-text *ngIf="!beach" class="ion-text-center">
           Playa no encontrada
         </ion-text>

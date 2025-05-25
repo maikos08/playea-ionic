@@ -94,24 +94,27 @@ export class CommentService {
           id: doc.id,
           ...doc.data(),
         })) as Comment[];
-
+        console.log('Raw comments from Firestore:', comments); // Debug
         return this.beachService.getAllBeaches().pipe(
           switchMap((beaches) => {
+            console.log('Beaches fetched:', beaches); // Debug
             const beachMap = new Map(beaches.map((beach) => [beach.id, beach]));
             return this.authService.getUsers().pipe(
               switchMap((users) => {
+                console.log('Users fetched:', users); // Debug
                 const userMap = new Map(users.map((user) => [user.id, user]));
+                const result = comments
+                  .map((comment) => ({
+                    comment,
+                    beach: beachMap.get(comment.beachId),
+                    user: userMap.get(comment.userId),
+                  }))
+                  .filter(
+                    (item): item is CommentWithBeachAndUser =>
+                      item.beach !== undefined && item.user !== undefined
+                  );
+                console.log('Final comments with beach and user:', result); // Debug
                 return new Observable<CommentWithBeachAndUser[]>((observer) => {
-                  const result = comments
-                    .map((comment) => ({
-                      comment,
-                      beach: beachMap.get(comment.beachId),
-                      user: userMap.get(comment.userId),
-                    }))
-                    .filter(
-                      (item): item is CommentWithBeachAndUser =>
-                        item.beach !== undefined && item.user !== undefined
-                    );
                   observer.next(result);
                   observer.complete();
                 });
