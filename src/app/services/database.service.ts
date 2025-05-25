@@ -33,6 +33,8 @@ export class DatabaseService {
   }
 
   public async initOnceIfNeeded() {
+    await this.sqlite.closeAllConnections();
+
     if (this.initialized) return;
 
     await this.platform.ready();
