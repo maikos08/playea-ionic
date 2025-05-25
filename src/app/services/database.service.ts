@@ -57,7 +57,9 @@ export class DatabaseService {
         this.showDebugToast('SQLite initialized');
       } catch (error) {
         console.error('Error opening SQLite database', error);
-        this.showDebugToast('❌ SQLite init failed');
+        this.showDebugToast(
+          error instanceof Error ? error.message : 'Unknown error'
+        );
       }
     } else {
       this.showDebugToast('Running in Web mode');
