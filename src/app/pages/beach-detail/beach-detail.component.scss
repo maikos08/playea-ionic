@@ -13,6 +13,10 @@ ion-text {
   font-size: 1rem;
 }
 
+ion-grid {
+  max-height: 400px;
+}
+
 .loading-text {
   color: var(--ion-color-medium);
   font-size: 1.2rem;
