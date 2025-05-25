@@ -16,9 +16,7 @@ export class FavoritesService {
   private isNative = Capacitor.isNativePlatform();
 
   constructor() {
-    if (this.isNative) {
-      this.databaseService['init']?.(); // Ensure native DB is initialized
-    }
+    // Inicializar en el constructor solo si es necesario
   }
 
   async addFavoriteBeach(beach: FavoriteBeach): Promise<void> {
@@ -28,14 +26,18 @@ export class FavoritesService {
       coverUrl: beach.coverUrl,
     };
     await this.databaseService.addFavorite(item);
+    console.log('Favorite beach added:', beach);
   }
 
   async removeFavoriteBeach(beachId: string): Promise<void> {
     await this.databaseService.removeFavorite(beachId);
+    console.log('Favorite beach removed:', beachId);
   }
 
   isFavoriteBeach(beachId: string): Observable<boolean> {
-    return from(this.databaseService.isFavorite(beachId));
+    return from(this.databaseService.isFavorite(beachId)).pipe(
+      catchError(() => of(false))
+    );
   }
 
   getFavoriteBeaches(): Observable<FavoriteBeach[]> {
@@ -47,11 +49,15 @@ export class FavoritesService {
           coverUrl: item.coverUrl,
         }))
       ),
-      catchError(() => of([]))
+      catchError((error) => {
+        console.error('Error in getFavoriteBeaches:', error);
+        return of([]);
+      })
     );
   }
 
   async clearFavorites(): Promise<void> {
     await this.databaseService.clearFavorites();
+    console.log('All favorite beaches cleared');
   }
 }
