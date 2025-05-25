@@ -14,11 +14,13 @@
 <div *ngIf="isRegistered && isPopupOpen" class="user-header__popup">
   <div class="popup__container">
     <img [src]="userPhoto" alt="UserIcon" class="popup__image">
+    <p style="color: black;">{{ firstName }} {{ lastName }}</p>
     <div class="popup__account-buttons">
       <a href="/auth/login" class="popup__account-button popup__account-link">Cambiar Cuenta</a>
       <a (click)="logout()" class="popup__account-button popup__account-link">Cerrar Sesión</a>
     </div>
     <div class="popup__nav-buttons">
+      <a href="/profile" class="popup__nav-button popup__nav-link">Perfil</a>
       <a href="/favorites" class="popup__nav-button popup__nav-link">Favoritos</a>
     </div>
   </div>

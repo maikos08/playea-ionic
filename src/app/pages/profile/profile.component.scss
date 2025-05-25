@@ -1,0 +1,160 @@
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 80%;
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  justify-content: center;
+  height: 100%;
+}
+
+ion-content {
+  background-color: #fff;
+}
+
+.profile__label {
+  font-size: 1em;
+  letter-spacing: 1px;
+  word-spacing: 2.5px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.profile__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 100%;
+  align-items: stretch;
+}
+
+.profile__input {
+  --background: #ccc6;
+  --border-radius: 10px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --box-shadow: 0 0 5px 0 #0004;
+}
+
+.profile__user-image {
+  text-align: center;
+}
+
+.profile__username {
+  font-size: 1.5em;
+  font-weight: 700;
+  text-align: center;
+}
+
+.profile__change-link {
+  font-size: 0.8em;
+  color: var(--change-user-image-color, #007bff);
+  text-shadow: 0 0 1px #0004;
+  cursor: pointer;
+}
+
+.profile__avatar {
+  min-width: 100px;
+  max-width: 100px;
+  min-height: 100px;
+  max-height: 100px;
+  border-radius: 50%;
+  margin: auto;
+  border: 1px solid #0003;
+  box-shadow: 0 0 3px 0 #0004;
+}
+
+.profile__input--button {
+  --background: var(--footer-background, #b78c3d);
+  --color: var(--footer-text-color, #f0e1a1);
+  --border-radius: 10px;
+  --box-shadow: 0 0 5px 0 #0002;
+  --padding-start: 20px;
+  --padding-end: 20px;
+}
+
+.profile__input--button:hover {
+  --background: var(--footer-background, #b78c3d);
+  opacity: 0.9;
+}
+
+.profile__image-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.profile__popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+.profile__file-input {
+  --background: #ccc6;
+  --border-radius: 10px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  margin: 10px 0;
+}
+
+.profile__popup-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.profile__cancel-button {
+  --background: #dc3545;
+  --color: white;
+  --border-radius: 10px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+}
+
+ion-content.ion-page {
+  --background: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 20px;
+  --padding-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .profile {
+    width: 90%;
+    padding: 10px;
+  }
+  .profile__avatar {
+    max-width: 80px;
+    max-height: 80px;
+    min-width: 80px;
+    min-height: 80px;
+  }
+  .profile__username {
+    font-size: 1.2em;
+  }
+  .profile__label {
+    font-size: 0.9em;
+  }
+  .profile__input {
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+  .profile__change-link {
+    font-size: 0.7em;
+  }
+}
