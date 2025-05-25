@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Observable, of } from 'rxjs';
 import type { User as FirebaseUser } from 'firebase/auth';
+import {DatabaseService} from "../../services/database.service";
 
 @Component({
   selector: 'app-beach-detail-layout',
@@ -25,6 +26,7 @@ export class BeachDetailLayoutComponent implements OnInit {
   private favoritesService = inject(FavoritesService);
   private router = inject(Router);
   private toastController = inject(ToastController);
+  private databaseService = inject(DatabaseService);
 
   ngOnInit(): void {
     console.log('BeachDetailLayoutComponent received beach:', this.beach);
@@ -71,6 +73,7 @@ export class BeachDetailLayoutComponent implements OnInit {
       const isCurrentlyFavorite = await this.favoritesService.isFavoriteBeach(this.user.uid, this.beach.id).toPromise();
       if (isCurrentlyFavorite) {
         await this.favoritesService.removeFavoriteBeach(this.user.uid, this.beach.id);
+        this.databaseService.removeFavorite(this.beach.id);
         const toast = await this.toastController.create({
           message: `${this.beach.name} eliminada de favoritos.`,
           duration: 2000,
@@ -80,6 +83,7 @@ export class BeachDetailLayoutComponent implements OnInit {
         await toast.present();
       } else {
         await this.favoritesService.addFavoriteBeach(this.user.uid, this.beach.id);
+        this.databaseService.addFavorite(this.beach);
         const toast = await this.toastController.create({
           message: `${this.beach.name} añadida a favoritos.`,
           duration: 2000,
