@@ -1,10 +1,5 @@
-import com.getcapacitor.community.database.sqlite.CapacitorSQLite;
+package io.ionic.starter;
 
-public class MainActivity extends BridgeActivity {
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+import com.getcapacitor.BridgeActivity;
 
-    registerPlugin(CapacitorSQLite.class);
-  }
-}
+public class MainActivity extends BridgeActivity {}
