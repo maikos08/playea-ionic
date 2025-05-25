@@ -144,3 +144,8 @@ Esta aplicación está pensada para ser **escalable, responsive y modular**, ofr
 - Componentes reutilizables y layouts flexibles.
 
 ¡Lista para desplegarse como PWA o app nativa! 🚀
+
+## 📹 vídeo presentación
+
+https://drive.google.com/file/d/1TK3PLG2AWPtaMwfhc00BrqHmChREgDtg/view?usp=sharing
+
