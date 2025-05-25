@@ -7,12 +7,6 @@ import {
 import { Capacitor } from '@capacitor/core';
 import { Platform } from '@ionic/angular';
 
-export interface FavoriteItem {
-  id: string;
-  title: string;
-  imageUrl: string;
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -22,7 +16,7 @@ export class DatabaseService {
   private isWeb = false;
 
   private readonly DB_NAME = 'favoritesDB';
-  private readonly STORAGE_KEY = 'favorites';
+  private readonly STORAGE_KEY = 'favoriteIds';
 
   constructor(private platform: Platform) {
     this.sqlite = new SQLiteConnection(CapacitorSQLite);
@@ -44,11 +38,13 @@ export class DatabaseService {
         );
         await db.open();
         this.db = db;
+
+        // ❗ Development only — remove in production
+        await db.execute(`DROP TABLE IF EXISTS favorites;`);
+
         await db.execute(`
           CREATE TABLE IF NOT EXISTS favorites (
-            id TEXT PRIMARY KEY,
-            title TEXT,
-            imageUrl TEXT
+            id TEXT PRIMARY KEY
           );
         `);
       } catch (error) {
@@ -57,46 +53,45 @@ export class DatabaseService {
     }
   }
 
-  async addFavorite(item: FavoriteItem): Promise<void> {
+  async addFavorite(id: string): Promise<void> {
     if (this.isWeb) {
-      const favorites = await this.getFavorites();
-      if (!favorites.some((fav) => fav.id === item.id)) {
-        favorites.push(item);
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(favorites));
+      const ids = await this.getFavorites();
+      if (!ids.includes(id)) {
+        ids.push(id);
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(ids));
       }
     } else if (this.db) {
-      await this.db.run(
-        `INSERT OR REPLACE INTO favorites (id, title, imageUrl) VALUES (?, ?, ?)`,
-        [item.id, item.title, item.imageUrl]
-      );
+      await this.db.run(`INSERT OR REPLACE INTO favorites (id) VALUES (?)`, [
+        id,
+      ]);
     }
   }
 
   async removeFavorite(id: string): Promise<void> {
     if (this.isWeb) {
-      const favorites = await this.getFavorites();
-      const updated = favorites.filter((fav) => fav.id !== id);
+      const ids = await this.getFavorites();
+      const updated = ids.filter((favId) => favId !== id);
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updated));
     } else if (this.db) {
       await this.db.run(`DELETE FROM favorites WHERE id = ?`, [id]);
     }
   }
 
-  async getFavorites(): Promise<FavoriteItem[]> {
+  async getFavorites(): Promise<string[]> {
     if (this.isWeb) {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       return stored ? JSON.parse(stored) : [];
     } else if (this.db) {
-      const res = await this.db.query(`SELECT * FROM favorites`);
-      return res.values ?? [];
+      const res = await this.db.query(`SELECT id FROM favorites`);
+      return res.values?.map((row) => row.id) ?? [];
     }
     return [];
   }
 
   async isFavorite(id: string): Promise<boolean> {
     if (this.isWeb) {
-      const favorites = await this.getFavorites();
-      return favorites.some((fav) => fav.id === id);
+      const ids = await this.getFavorites();
+      return ids.includes(id);
     } else if (this.db) {
       const res = await this.db.query(`SELECT id FROM favorites WHERE id = ?`, [
         id,

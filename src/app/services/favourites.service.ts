@@ -5,30 +5,25 @@ import { Observable, combineLatest, from, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { Beach } from '../models/beach';
 import { BeachService } from './beach.service';
-import { DatabaseService, FavoriteItem } from './database.service'; // Unified SQLite/localStorage service
+import { DatabaseService } from './database.service';
 
 @Injectable({ providedIn: 'root' })
 export class FavoritesService {
   private firestore = inject(Firestore);
   private beachService = inject(BeachService);
-  private databaseService = inject(DatabaseService); // Was SQLiteService
+  private databaseService = inject(DatabaseService);
 
   private isNative = Capacitor.isNativePlatform();
 
   constructor() {
     if (this.isNative) {
-      this.databaseService['init']?.(); // Optional: ensure DB initialized
+      this.databaseService['init']?.(); // Optional init
     }
   }
 
   async addFavoriteBeach(userId: string, beach: Beach): Promise<void> {
     if (this.isNative) {
-      const item: FavoriteItem = {
-        id: beach.id,
-        title: beach.name,
-        imageUrl: beach.coverUrl || '',
-      };
-      return this.databaseService.addFavorite(item);
+      return this.databaseService.addFavorite(beach.id);
     } else {
       const userDocRef = doc(this.firestore, `Users/${userId}`);
       await updateDoc(userDocRef, { [`favorites.${beach.id}`]: true });
@@ -58,9 +53,7 @@ export class FavoritesService {
 
   getFavoriteBeaches(userId: string): Observable<string[]> {
     if (this.isNative) {
-      return from(this.databaseService.getFavorites()).pipe(
-        map((items) => items.map((item) => item.id))
-      );
+      return from(this.databaseService.getFavorites()); // Now returns string[]
     } else {
       const userDocRef = doc(this.firestore, `Users/${userId}`);
       return from(getDoc(userDocRef)).pipe(
