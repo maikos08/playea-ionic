@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonContent } from '@ionic/angular/standalone';
 import { HeaderAlignmentComponent } from 'src/app/components/header-alignment/header-alignment.component';
 import { BeachGridComponent } from '../../components/beach-grid/beach-grid.component';
@@ -18,17 +18,16 @@ import { FavoritesService } from '../../services/favourites.service';
   ],
   templateUrl: './favorites.component.html',
 })
-export class FavoritesComponent {
+export class FavoritesComponent implements OnInit {
   beaches: { id: string; name: string; coverUrl: string }[] = [];
   loading = true;
   error: string | null = null; // Añadido para manejar errores en la UI
 
   constructor(private favoritesService: FavoritesService) {}
 
-  async ionViewWillEnter() {
+  async ngOnInit() {
     this.loading = true;
     this.error = null;
-    console.log('ionViewWillEnter: Loading favorite beaches...');
 
     try {
       // Asegúrate de que la base de datos esté inicializada
