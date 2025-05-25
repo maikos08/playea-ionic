@@ -41,37 +41,41 @@ export class DatabaseService {
     if (!this.isWeb) {
       try {
         const existing = await this.sqlite.isConnection(this.STORAGE_DB, false);
-        if (existing.result) {
-          this.showDebugToast('⚠️ Closing existing SQLite connection...');
-          await this.sqlite.closeConnection(this.STORAGE_DB, false);
-        }
 
-        const db = await this.sqlite.createConnection(
-          this.STORAGE_DB,
-          false,
-          'no-encryption',
-          1,
-          false
-        );
+        let db: SQLiteDBConnection;
+
+        if (existing.result) {
+          this.showDebugToast('🔁 Retrieving existing connection...');
+          db = await this.sqlite.retrieveConnection(this.STORAGE_DB, false);
+        } else {
+          this.showDebugToast('🆕 Creating new SQLite connection...');
+          db = await this.sqlite.createConnection(
+            this.STORAGE_DB,
+            false,
+            'no-encryption',
+            1,
+            false
+          );
+        }
 
         await db.open();
         this.db = db;
 
         await db.execute(`
-          CREATE TABLE IF NOT EXISTS favorites (
-            id TEXT PRIMARY KEY,
-            title TEXT,
-            coverUrl TEXT
-          );
-        `);
+        CREATE TABLE IF NOT EXISTS favorites (
+          id TEXT PRIMARY KEY,
+          title TEXT,
+          coverUrl TEXT
+        );
+      `);
 
-        this.showDebugToast('✅ SQLite connection established');
+        this.showDebugToast('✅ SQLite connection ready');
       } catch (error: any) {
-        console.error('Error initializing SQLite:', error);
+        console.error('SQLite init error:', error);
         this.showDebugToast(`❌ SQLite init failed: ${error.message || error}`);
       }
     } else {
-      this.showDebugToast('ℹ️ Running in Web mode (localStorage)');
+      this.showDebugToast('ℹ️ Web mode using localStorage');
     }
 
     this.initialized = true;
