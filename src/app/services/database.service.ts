@@ -6,7 +6,12 @@ import {
 } from '@capacitor-community/sqlite';
 import { Capacitor } from '@capacitor/core';
 import { Platform, ToastController } from '@ionic/angular';
-import { FavoriteBeach } from './favourites.service';
+
+export interface FavoriteBeach {
+  id: string;
+  name: string;
+  coverUrl: string;
+}
 
 @Injectable({
   providedIn: 'root',

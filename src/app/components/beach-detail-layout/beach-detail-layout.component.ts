@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { Observable, of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { Beach } from '../../models/beach';
-import { FavoritesService } from '../../services/favourites.service';
+import { DatabaseService } from '../../services/database.service';
 
 @Component({
   selector: 'app-beach-detail-layout',
@@ -17,7 +17,7 @@ export class BeachDetailLayoutComponent implements OnInit {
   @Input() beach: Beach | null = null;
   isFavorite$: Observable<boolean> = of(false);
 
-  private favoritesService = inject(FavoritesService);
+  private databaseService = inject(DatabaseService);
   private router = inject(Router);
   private toastController = inject(ToastController);
 
@@ -27,7 +27,7 @@ export class BeachDetailLayoutComponent implements OnInit {
       return;
     }
 
-    this.isFavorite$ = this.favoritesService.isFavoriteBeach(this.beach.id);
+    this.isFavorite$ = from(this.databaseService.isFavorite(this.beach.id));
   }
 
   async toggleFavorite(): Promise<void> {
@@ -37,18 +37,18 @@ export class BeachDetailLayoutComponent implements OnInit {
     }
 
     try {
-      const isCurrentlyFavorite = await this.favoritesService
-        .isFavoriteBeach(this.beach.id)
-        .toPromise();
+      const isCurrentlyFavorite = await this.databaseService.isFavorite(
+        this.beach.id
+      );
 
       if (isCurrentlyFavorite) {
-        await this.favoritesService.removeFavoriteBeach(this.beach.id);
+        await this.databaseService.removeFavorite(this.beach.id);
         await this.showToast(
           `${this.beach.name} eliminada de favoritos.`,
           'success'
         );
       } else {
-        await this.favoritesService.addFavoriteBeach({
+        await this.databaseService.addFavorite({
           id: this.beach.id,
           name: this.beach.name,
           coverUrl: this.beach.coverUrl || '',
