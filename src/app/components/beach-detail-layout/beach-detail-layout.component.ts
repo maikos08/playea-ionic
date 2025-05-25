@@ -1,13 +1,12 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { IonicModule, ToastController } from '@ionic/angular';
+import type { User as FirebaseUser } from 'firebase/auth';
+import { Observable, of } from 'rxjs';
 import { Beach } from '../../models/beach';
 import { AuthStateService } from '../../services/auth-state.service';
 import { FavoritesService } from '../../services/favourites.service';
-import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
-import { Observable, of } from 'rxjs';
-import type { User as FirebaseUser } from 'firebase/auth';
 
 @Component({
   selector: 'app-beach-detail-layout',
@@ -37,7 +36,10 @@ export class BeachDetailLayoutComponent implements OnInit {
       next: (user) => {
         this.user = user;
         if (user && this.beach?.id) {
-          this.isFavorite$ = this.favoritesService.isFavoriteBeach(user.uid, this.beach.id);
+          this.isFavorite$ = this.favoritesService.isFavoriteBeach(
+            user.uid,
+            this.beach.id
+          );
         } else {
           this.isFavorite$ = of(false);
         }
@@ -45,7 +47,7 @@ export class BeachDetailLayoutComponent implements OnInit {
       error: (error) => {
         console.error('Error fetching user from AuthStateService:', error);
         this.isFavorite$ = of(false);
-      }
+      },
     });
   }
 
@@ -68,9 +70,14 @@ export class BeachDetailLayoutComponent implements OnInit {
     }
 
     try {
-      const isCurrentlyFavorite = await this.favoritesService.isFavoriteBeach(this.user.uid, this.beach.id).toPromise();
+      const isCurrentlyFavorite = await this.favoritesService
+        .isFavoriteBeach(this.user.uid, this.beach.id)
+        .toPromise();
       if (isCurrentlyFavorite) {
-        await this.favoritesService.removeFavoriteBeach(this.user.uid, this.beach.id);
+        await this.favoritesService.removeFavoriteBeach(
+          this.user.uid,
+          this.beach.id
+        );
         const toast = await this.toastController.create({
           message: `${this.beach.name} eliminada de favoritos.`,
           duration: 2000,
@@ -79,7 +86,7 @@ export class BeachDetailLayoutComponent implements OnInit {
         });
         await toast.present();
       } else {
-        await this.favoritesService.addFavoriteBeach(this.user.uid, this.beach.id);
+        await this.favoritesService.addFavoriteBeach(this.user.uid, this.beach);
         const toast = await this.toastController.create({
           message: `${this.beach.name} añadida a favoritos.`,
           duration: 2000,
