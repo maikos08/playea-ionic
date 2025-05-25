@@ -1,90 +1,57 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Capacitor } from '@capacitor/core';
-import { Observable, combineLatest, from, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { Beach } from '../models/beach';
-import { BeachService } from './beach.service';
-import { DatabaseService } from './database.service';
+import { Observable, from, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { DatabaseService, Item } from './database.service';
+
+export interface FavoriteBeach {
+  id: string;
+  name: string;
+  coverUrl: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class FavoritesService {
-  private firestore = inject(Firestore);
-  private beachService = inject(BeachService);
   private databaseService = inject(DatabaseService);
-
   private isNative = Capacitor.isNativePlatform();
 
   constructor() {
     if (this.isNative) {
-      this.databaseService['init']?.(); // Optional init
+      this.databaseService['init']?.(); // Ensure native DB is initialized
     }
   }
 
-  async addFavoriteBeach(userId: string, beach: Beach): Promise<void> {
-    if (this.isNative) {
-      return this.databaseService.addFavorite(beach.id);
-    } else {
-      const userDocRef = doc(this.firestore, `Users/${userId}`);
-      await updateDoc(userDocRef, { [`favorites.${beach.id}`]: true });
-    }
+  async addFavoriteBeach(beach: FavoriteBeach): Promise<void> {
+    const item: Item = {
+      id: beach.id,
+      title: beach.name,
+      coverUrl: beach.coverUrl,
+    };
+    await this.databaseService.addFavorite(item);
   }
 
-  async removeFavoriteBeach(userId: string, beachId: string): Promise<void> {
-    if (this.isNative) {
-      return this.databaseService.removeFavorite(beachId);
-    } else {
-      const userDocRef = doc(this.firestore, `Users/${userId}`);
-      await updateDoc(userDocRef, { [`favorites.${beachId}`]: false });
-    }
+  async removeFavoriteBeach(beachId: string): Promise<void> {
+    await this.databaseService.removeFavorite(beachId);
   }
 
-  isFavoriteBeach(userId: string, beachId: string): Observable<boolean> {
-    if (this.isNative) {
-      return from(this.databaseService.isFavorite(beachId));
-    } else {
-      const userDocRef = doc(this.firestore, `Users/${userId}`);
-      return from(getDoc(userDocRef)).pipe(
-        map((docSnap) => docSnap.data()?.['favorites']?.[beachId] === true),
-        catchError(() => of(false))
-      );
-    }
+  isFavoriteBeach(beachId: string): Observable<boolean> {
+    return from(this.databaseService.isFavorite(beachId));
   }
 
-  getFavoriteBeaches(userId: string): Observable<string[]> {
-    if (this.isNative) {
-      return from(this.databaseService.getFavorites()); // Now returns string[]
-    } else {
-      const userDocRef = doc(this.firestore, `Users/${userId}`);
-      return from(getDoc(userDocRef)).pipe(
-        map((docSnap) => {
-          const data = docSnap.data();
-          return data?.['favorites']
-            ? Object.keys(data['favorites']).filter(
-                (id) => data['favorites'][id] === true
-              )
-            : [];
-        }),
-        catchError(() => of([]))
-      );
-    }
-  }
-
-  getFavoriteBeachesDetails(userId: string): Observable<Beach[]> {
-    return this.getFavoriteBeaches(userId).pipe(
-      switchMap((ids) =>
-        ids.length
-          ? combineLatest(
-              ids.map((id) =>
-                this.beachService
-                  .getBeachById(id)
-                  .pipe(catchError(() => of(null)))
-              )
-            )
-          : of([])
+  getFavoriteBeaches(): Observable<FavoriteBeach[]> {
+    return from(this.databaseService.getFavorites()).pipe(
+      map((items: Item[]) =>
+        items.map((item) => ({
+          id: item.id,
+          name: item.title,
+          coverUrl: item.coverUrl,
+        }))
       ),
-      map((beaches) => beaches.filter((b): b is Beach => b !== null)),
       catchError(() => of([]))
     );
+  }
+
+  async clearFavorites(): Promise<void> {
+    await this.databaseService.clearFavorites();
   }
 }

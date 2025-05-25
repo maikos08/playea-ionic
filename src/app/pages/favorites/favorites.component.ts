@@ -1,11 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonContent } from '@ionic/angular/standalone';
 import { HeaderAlignmentComponent } from 'src/app/components/header-alignment/header-alignment.component';
 import { BeachGridComponent } from '../../components/beach-grid/beach-grid.component';
 import { TitlePageComponent } from '../../components/title-page/title-page.component';
-import { Beach } from '../../models/beach';
-import { AuthStateService } from '../../services/auth-state.service';
 import { FavoritesService } from '../../services/favourites.service';
 
 @Component({
@@ -21,37 +19,26 @@ import { FavoritesService } from '../../services/favourites.service';
   templateUrl: './favorites.component.html',
 })
 export class FavoritesComponent {
-  beaches: Beach[] = [];
+  beaches: { id: string; name: string; coverUrl: string }[] = [];
   loading = true;
 
-  private authStateService = inject(AuthStateService);
-  private favoritesService = inject(FavoritesService);
+  constructor(private favoritesService: FavoritesService) {}
 
   async ionViewWillEnter() {
     this.loading = true;
 
-    this.authStateService.user$.subscribe({
-      next: (user) => {
-        if (user) {
-          this.favoritesService.getFavoriteBeachesDetails(user.uid).subscribe({
-            next: (beaches) => {
-              this.beaches = beaches;
-              this.loading = false;
-            },
-            error: (error) => {
-              console.error('Error fetching favorite beaches:', error);
-              this.beaches = [];
-              this.loading = false;
-            },
-          });
-        } else {
-          console.log('No authenticated user found');
-          this.beaches = [];
-          this.loading = false;
-        }
+    this.favoritesService.getFavoriteBeaches().subscribe({
+      next: (beaches) => {
+        // Adapt plain favorites into Beach model if needed
+        this.beaches = beaches.map((fav) => ({
+          id: fav.id,
+          name: fav.name,
+          coverUrl: fav.coverUrl,
+        }));
+        this.loading = false;
       },
       error: (error) => {
-        console.error('Error subscribing to user state:', error);
+        console.error('Error loading local favorites:', error);
         this.beaches = [];
         this.loading = false;
       },

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { BeachCardComponent } from '../beach-card/beach-card.component';
-import { Beach } from '../../models/beach';
+import { Component, Input, OnInit } from '@angular/core';
 import { beachesList } from '../../constants/beaches-list';
+import { Beach } from '../../models/beach';
+import { BeachCardComponent } from '../beach-card/beach-card.component';
 // import { BeachService } from '../../services/beach.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { beachesList } from '../../constants/beaches-list';
   styleUrls: ['./beach-grid.component.scss'],
 })
 export class BeachGridComponent implements OnInit {
-  @Input() beaches: Beach[] = [];
+  @Input() beaches: any[] = [];
   @Input() showEmptyState: boolean = false;
   // beachService = inject(BeachService);
   uploadStatus: string = '';
