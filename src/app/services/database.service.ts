@@ -6,6 +6,7 @@ import {
 } from '@capacitor-community/sqlite';
 import { Capacitor } from '@capacitor/core';
 import { Platform } from '@ionic/angular';
+import { FavoritesService} from "./favourites.service";
 
 export interface FavoriteBeach {
   id: string;
@@ -21,10 +22,11 @@ export class DatabaseService {
   private db: SQLiteDBConnection | null = null;
   private isWeb = true;
   private readonly DB_NAME = 'favoritesDB';
+  private favouritesService = new FavoritesService();
 
   constructor(private platform: Platform) {
     this.sqlite = new SQLiteConnection(CapacitorSQLite);
-    this.init();
+    // this.init();
   }
 
   private async init() {
@@ -69,16 +71,16 @@ export class DatabaseService {
       const stored = localStorage.getItem('favorites');
       const favorites: FavoriteBeach[] = stored ? JSON.parse(stored) : [];
       return favorites.some((b) => b.id === id);
-    } else if (this.db) {
-      const res = await this.db.query(`SELECT id FROM favorites WHERE id = ?`, [
-        id,
-      ]);
-      return !!(res.values && res.values.length > 0);
+    } else {
+      // const res = await this.db.query(`SELECT id FROM favorites WHERE id = ?`, [
+      //   id,
+      // ]);
+      // return !!(res.values && res.values.length > 0);
     }
     return false;
   }
 
-  async addFavorite(beach: FavoriteBeach): Promise<void> {
+  async addFavorite(userid: string | undefined, beach: FavoriteBeach): Promise<void> {
     if (this.isWeb) {
       const stored = localStorage.getItem('favorites');
       const favorites: FavoriteBeach[] = stored ? JSON.parse(stored) : [];
@@ -86,22 +88,24 @@ export class DatabaseService {
         favorites.push(beach);
         localStorage.setItem('favorites', JSON.stringify(favorites));
       }
-    } else if (this.db) {
-      await this.db.run(
-        `INSERT OR REPLACE INTO favorites (id, name, coverUrl) VALUES (?, ?, ?)`,
-        [beach.id, beach.name, beach.coverUrl]
-      );
+    } else {
+      // await this.db.run(
+      //   `INSERT OR REPLACE INTO favorites (id, name, coverUrl) VALUES (?, ?, ?)`,
+      //   [beach.id, beach.name, beach.coverUrl]
+      // );
+      this.favouritesService.addFavoriteBeach(userid, beach.id)
     }
   }
 
-  async removeFavorite(id: string): Promise<void> {
+  async removeFavorite(userid: string | undefined, beachid: string): Promise<void> {
     if (this.isWeb) {
       const stored = localStorage.getItem('favorites');
       const favorites: FavoriteBeach[] = stored ? JSON.parse(stored) : [];
-      const updated = favorites.filter((b) => b.id !== id);
+      const updated = favorites.filter((b) => b.id !== beachid);
       localStorage.setItem('favorites', JSON.stringify(updated));
     } else if (this.db) {
-      await this.db.run(`DELETE FROM favorites WHERE id = ?`, [id]);
+      // await this.db.run(`DELETE FROM favorites WHERE id = ?`, [id]);
+      this.favouritesService.removeFavoriteBeach(userid, beachid)
     }
   }
 
@@ -110,8 +114,8 @@ export class DatabaseService {
       const stored = localStorage.getItem('favorites');
       return stored ? JSON.parse(stored) : [];
     } else if (this.db) {
-      const res = await this.db.query(`SELECT * FROM favorites`);
-      return res.values ?? [];
+      // const res = await this.db.query(`SELECT * FROM favorites`);
+      // return res.values ?? [];
     }
     return [];
   }
@@ -120,7 +124,7 @@ export class DatabaseService {
     if (this.isWeb) {
       localStorage.removeItem('favorites');
     } else if (this.db) {
-      await this.db.execute(`DELETE FROM favorites`);
+      // await this.db.execute(`DELETE FROM favorites`);
     }
   }
 }
