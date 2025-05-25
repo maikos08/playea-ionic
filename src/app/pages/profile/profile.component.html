@@ -1,0 +1,82 @@
+<ion-content class="ion-page">
+  <div class="profile">
+    <div class="profile__user-image">
+      <img [src]="userPhoto" alt="UserIcon" class="profile__avatar">
+      <p>
+        <span class="profile__username">{{ userData.firstName || 'Usuario' }}</span>
+      </p>
+      <p>
+        <a href="#" class="profile__change-link" (click)="toggleImagePopup($event)">Cambia tu foto de perfil</a>
+      </p>
+    </div>
+
+    <form class="profile__form" (ngSubmit)="saveChanges()">
+      <div class="profile__form-input">
+        <ion-label class="profile__label">Nombre</ion-label>
+        <ion-input
+          type="text"
+          name="firstName"
+          id="profile-name"
+          [(ngModel)]="formData.firstName"
+          placeholder="Pablo"
+          class="profile__input"
+          required
+        ></ion-input>
+      </div>
+
+      <div class="profile__form-input">
+        <ion-label class="profile__label">Apellido</ion-label>
+        <ion-input
+          type="text"
+          name="lastName"
+          id="profile-surname"
+          [(ngModel)]="formData.lastName"
+          placeholder="Acosta"
+          class="profile__input"
+          required
+        ></ion-input>
+      </div>
+
+      <div class="profile__form-input">
+        <ion-label class="profile__label">Email</ion-label>
+        <ion-input
+          type="email"
+          name="email"
+          id="profile-email"
+          [(ngModel)]="formData.email"
+          placeholder="pablo1234@email.com"
+          class="profile__input"
+          disabled
+        ></ion-input>
+      </div>
+
+      <div class="profile__form-input">
+        <ion-button
+          type="submit"
+          class="profile__input--button"
+          expand="block"
+        >
+          Guardar Cambios
+        </ion-button>
+      </div>
+    </form>
+
+    <div class="profile__image-popup" *ngIf="isImagePopupVisible">
+      <div class="profile__popup-content">
+        <h2>Cambiar Foto de Perfil</h2>
+        <ion-label class="profile__label">URL de la Imagen</ion-label>
+        <ion-input
+          type="url"
+          [(ngModel)]="newImageUrl"
+          placeholder="https://example.com/image.jpg"
+          class="profile__input profile__file-input"
+          required
+        ></ion-input>
+        <div class="profile__popup-buttons">
+          <ion-button class="profile__input--button" (click)="updateImageUrl()">Actualizar</ion-button>
+          <ion-button class="profile__cancel-button" (click)="toggleImagePopup()">Cancelar</ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

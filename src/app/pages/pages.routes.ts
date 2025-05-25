@@ -13,5 +13,9 @@ export default [
   {
     path:'favorites',
     loadComponent: () => import('./favorites/favorites.component').then(m => m.FavoritesComponent)
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./profile/profile.component').then(m => m.ProfileComponent)
   }
 ] as Routes;
