@@ -50,6 +50,10 @@ export class DatabaseService {
 
   private async createTableIfNotExists() {
     if (!this.db) return;
+
+    const dropQuery = `DROP TABLE IF EXISTS favorites;`;
+    await this.db.execute(dropQuery);
+
     const query = `
       CREATE TABLE IF NOT EXISTS favorites (
         id TEXT PRIMARY KEY,
