@@ -22,29 +22,30 @@ export class DatabaseService {
   private isWeb: boolean = false;
   private readonly STORAGE_KEY = 'favorites';
   private readonly STORAGE_DB = 'favoritesDB';
+  private initialized = false;
 
   private toastController = inject(ToastController);
   private platform = inject(Platform);
 
   constructor() {
     this.sqlite = new SQLiteConnection(CapacitorSQLite);
-    this.init();
+    this.initOnceIfNeeded(); // call only once
   }
 
-  private async init() {
+  public async initOnceIfNeeded() {
+    if (this.initialized) return;
+
     await this.platform.ready();
     this.isWeb = Capacitor.getPlatform() === 'web';
 
     if (!this.isWeb) {
       try {
         const existing = await this.sqlite.isConnection(this.STORAGE_DB, false);
-
         if (existing.result) {
-          this.showDebugToast('⚠️ Closing existing connection...');
+          this.showDebugToast('⚠️ Closing existing SQLite connection...');
           await this.sqlite.closeConnection(this.STORAGE_DB, false);
         }
 
-        // ✅ Safe to create a new connection now
         const db = await this.sqlite.createConnection(
           this.STORAGE_DB,
           false,
@@ -57,12 +58,12 @@ export class DatabaseService {
         this.db = db;
 
         await db.execute(`
-        CREATE TABLE IF NOT EXISTS favorites (
-          id TEXT PRIMARY KEY,
-          title TEXT,
-          coverUrl TEXT
-        );
-      `);
+          CREATE TABLE IF NOT EXISTS favorites (
+            id TEXT PRIMARY KEY,
+            title TEXT,
+            coverUrl TEXT
+          );
+        `);
 
         this.showDebugToast('✅ SQLite connection established');
       } catch (error: any) {
@@ -72,9 +73,13 @@ export class DatabaseService {
     } else {
       this.showDebugToast('ℹ️ Running in Web mode (localStorage)');
     }
+
+    this.initialized = true;
   }
 
   async addFavorite(item: Item): Promise<void> {
+    await this.initOnceIfNeeded();
+
     try {
       if (this.isWeb) {
         const favorites = await this.getFavorites();
@@ -99,6 +104,8 @@ export class DatabaseService {
   }
 
   async removeFavorite(id: string): Promise<void> {
+    await this.initOnceIfNeeded();
+
     try {
       if (this.isWeb) {
         const favorites = await this.getFavorites();
@@ -118,6 +125,8 @@ export class DatabaseService {
   }
 
   async getFavorites(): Promise<Item[]> {
+    await this.initOnceIfNeeded();
+
     try {
       if (this.isWeb) {
         const stored = localStorage.getItem(this.STORAGE_KEY);
@@ -139,6 +148,8 @@ export class DatabaseService {
   }
 
   async isFavorite(id: string): Promise<boolean> {
+    await this.initOnceIfNeeded();
+
     try {
       if (this.isWeb) {
         const favorites = await this.getFavorites();
@@ -162,6 +173,8 @@ export class DatabaseService {
   }
 
   async clearFavorites(): Promise<void> {
+    await this.initOnceIfNeeded();
+
     try {
       if (this.isWeb) {
         localStorage.removeItem(this.STORAGE_KEY);

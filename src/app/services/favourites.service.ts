@@ -17,7 +17,9 @@ export class FavoritesService {
 
   constructor() {
     if (this.isNative) {
-      this.databaseService['init']?.(); // Ensure native DB is initialized
+      this.databaseService
+        .initOnceIfNeeded()
+        .catch((err) => console.error('Failed to init databaseService:', err));
     }
   }
 
