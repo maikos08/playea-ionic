@@ -5,33 +5,39 @@ import { Observable, combineLatest, from, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { Beach } from '../models/beach';
 import { BeachService } from './beach.service';
-import { SQLiteService } from './sqlite.service';
+import { DatabaseService, FavoriteItem } from './database.service'; // Unified SQLite/localStorage service
+
 @Injectable({ providedIn: 'root' })
 export class FavoritesService {
   private firestore = inject(Firestore);
   private beachService = inject(BeachService);
-  private sqliteService = inject(SQLiteService);
+  private databaseService = inject(DatabaseService); // Was SQLiteService
 
   private isNative = Capacitor.isNativePlatform();
 
   constructor() {
     if (this.isNative) {
-      this.sqliteService.init();
+      this.databaseService['init']?.(); // Optional: ensure DB initialized
     }
   }
 
-  async addFavoriteBeach(userId: string, beachId: string): Promise<void> {
+  async addFavoriteBeach(userId: string, beach: Beach): Promise<void> {
     if (this.isNative) {
-      return this.sqliteService.addFavorite(userId, beachId);
+      const item: FavoriteItem = {
+        id: beach.id,
+        title: beach.name,
+        imageUrl: beach.coverUrl || '',
+      };
+      return this.databaseService.addFavorite(item);
     } else {
       const userDocRef = doc(this.firestore, `Users/${userId}`);
-      await updateDoc(userDocRef, { [`favorites.${beachId}`]: true });
+      await updateDoc(userDocRef, { [`favorites.${beach.id}`]: true });
     }
   }
 
   async removeFavoriteBeach(userId: string, beachId: string): Promise<void> {
     if (this.isNative) {
-      return this.sqliteService.removeFavorite(userId, beachId);
+      return this.databaseService.removeFavorite(beachId);
     } else {
       const userDocRef = doc(this.firestore, `Users/${userId}`);
       await updateDoc(userDocRef, { [`favorites.${beachId}`]: false });
@@ -40,7 +46,7 @@ export class FavoritesService {
 
   isFavoriteBeach(userId: string, beachId: string): Observable<boolean> {
     if (this.isNative) {
-      return from(this.sqliteService.isFavorite(userId, beachId));
+      return from(this.databaseService.isFavorite(beachId));
     } else {
       const userDocRef = doc(this.firestore, `Users/${userId}`);
       return from(getDoc(userDocRef)).pipe(
@@ -52,7 +58,9 @@ export class FavoritesService {
 
   getFavoriteBeaches(userId: string): Observable<string[]> {
     if (this.isNative) {
-      return from(this.sqliteService.getFavorites(userId));
+      return from(this.databaseService.getFavorites()).pipe(
+        map((items) => items.map((item) => item.id))
+      );
     } else {
       const userDocRef = doc(this.firestore, `Users/${userId}`);
       return from(getDoc(userDocRef)).pipe(
